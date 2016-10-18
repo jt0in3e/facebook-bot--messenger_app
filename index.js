@@ -55,7 +55,7 @@ app.post('/webhook/', function (req, res) {
 const token = "EAAEUWM4MXN0BABZBI7WZBtYhEdm6V03NWlhRxH1AZBrk0m9OzaidRrO4YdlAUKJR71tMWlOAoQ9CtGIF3FdIn7I5jthhJwsM0pZAoYpZBOMJUVtWQ1yTdd1qIuoZCGxtG1dtfsc9TMC4alZAK3bQnxnnwXijEfG6rUoLHh7CvGEUgZDZD"
 
 function sendTextMessage(sender, text) {
-	let messageData = { text:text + "\nYou rock!\n"}
+	let messageData = { text:text + "\nMother fuck\n"}
 	
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
