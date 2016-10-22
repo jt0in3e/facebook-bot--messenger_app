@@ -21,7 +21,7 @@ app.get('/', function (req, res) {
 // for facebook verification 
 /*it's better to setup environment variable i.e.
 var verificationToken = process.env.VERIFY_TOKEN on you app's server*/
-const verificationToken = VERIFY_TOKEN;
+const verificationToken = process.env.VERIFY_TOKEN;
 app.get('/webhook/', function (req, res) {
 	if (req.query['hub.verify_token'] === verificationToken) {
 		res.send(req.query['hub.challenge'])
