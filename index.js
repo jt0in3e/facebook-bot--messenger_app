@@ -87,7 +87,7 @@ function postFeed(pageId, text) {
 	let messageData = { text:text };
 	
 	request({
-		url: 'https://graph.facebook.com/v2.6/pageId/feed',
+		url: 'https://graph.facebook.com/v2.6/me/feed',
 		qs: {access_token:pageFeedToken},
 		method: 'POST',
 		json: {
