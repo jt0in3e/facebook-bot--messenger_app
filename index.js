@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 
 // index
 app.get('/', function (req, res) {
-	res.send('hello world i am a secret bot')
+	res.status(200).send('hello world i am a secret bot')
 })
 
 // for facebook verification 
@@ -24,9 +24,10 @@ var verificationToken = process.env.VERIFY_TOKEN on you app's server*/
 const verificationToken = process.env.VERIFY_TOKEN;
 app.get('/webhook/', function (req, res) {
 	if (req.query['hub.verify_token'] === verificationToken) {
-		res.send(req.query['hub.challenge'])
+		res.status(200).send(req.query['hub.challenge'])
 	}
-	res.send('Error, wrong token')
+	res.send('Error, wrong token');
+	res.sendStatus(403);
 })
 
 // to post data
@@ -37,7 +38,7 @@ app.post('/webhook/', function (req, res) {
 		let sender = event.sender.id
 		if (event.message && event.message.text) {
 			let text = event.message.text
-			if (text === 'Generic') {
+			if (text === '/') {
 				sendGenericMessage(sender)
 				continue
 			} else if (text.substring(0,5) === "/post") {
