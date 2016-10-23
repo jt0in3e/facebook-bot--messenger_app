@@ -40,8 +40,12 @@ app.post('/webhook/', function (req, res) {
 			if (text === 'Generic') {
 				sendGenericMessage(sender)
 				continue
+			} else if (text.substring(0,5) === "/post") {
+				postFeed(283148272070769, text.substring(6))
+			} else {
+				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
 			}
-			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
+			
 		}
 		if (event.postback) {
 			let text = JSON.stringify(event.postback)
@@ -56,6 +60,7 @@ app.post('/webhook/', function (req, res) {
 // recommended to inject access tokens as environmental variables, e.g.
 // const token = process.env.PAGE_ACCESS_TOKEN
 const token = process.env.PAGE_ACCESS_TOKEN;
+const pageFeedToken = process.env.PAGE_FEED_POST_TOKEN;
 
 function sendTextMessage(sender, text) {
 	let messageData = { text:text + "\nMother fuck\n"}
@@ -71,6 +76,25 @@ function sendTextMessage(sender, text) {
 	}, function(error, response, body) {
 		if (error) {
 			console.log('Error sending messages: ', error)
+		} else if (response.body.error) {
+			console.log('Error: ', response.body.error)
+		}
+	})
+}
+
+function postFeed(pageId, text) {
+	let messageData = { text:text };
+	
+	request({
+		url: 'https://graph.facebook.com/v2.6/pageId/feed',
+		qs: {access_token:pageFeedToken},
+		method: 'POST',
+		json: {
+			message: messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error posting message to page: ', error)
 		} else if (response.body.error) {
 			console.log('Error: ', response.body.error)
 		}
