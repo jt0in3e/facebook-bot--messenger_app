@@ -65,6 +65,13 @@ function postFeed(pageId, text) {
 	})
 }
 
+function handleEvent(action, collection) {
+	collection.action({"name":"save"}, function(err, result) {
+		if (err) {return console.log(err);}
+		console.log("saved to database");
+	})
+}
+
 function sendGenericMessage(sender) {
 	let messageData = {
 		"attachment": {
@@ -118,6 +125,7 @@ function sendGenericMessage(sender) {
 MongoClient.connect(mongodbLink, function(err, database) {
 	if (err) {return console.log(err);}
 	db = database;
+	let events = db.collection("events");
 	// index
 	app.get('/', function (req, res) {
 		res.status(200).send('hello I\'m very sexy bot')
@@ -151,7 +159,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
 				if (text.substring(0,6) === "/event") {
 					//what to do with events
-					sendTextMessage(sender, "event received");
+					handleEvent(text.substring(7), events);
 					break;
 				}
 
@@ -171,4 +179,5 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	app.listen(app.get('port'), function() {
 		console.log('running on port', app.get('port'))
 	})
+/*end of MongoClient.connect*/
 })
