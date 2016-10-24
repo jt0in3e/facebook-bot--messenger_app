@@ -38,14 +38,22 @@ app.post('/webhook/', function (req, res) {
 		let sender = event.sender.id
 		if (event.message && event.message.text) {
 			let text = event.message.text
-			if (text === '/') {
-				sendGenericMessage(sender)
-				continue
-			} else if (text.substring(0,5) === "/post") {
-				postFeed(283148272070769, text.substring(6))
-			} else {
-				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
+			if (text === 'generic') {
+				sendGenericMessage(sender);
+				continue;
+			} 
+			//it is here only for testing how it works
+			if (text.substring(0,5) === "/post") {
+				postFeed(283148272070769, text.substring(6));
+				continue;
 			}
+
+			if (text.substring(0,6) === "/event") {
+				//what to do with events
+				sendTextMessage(sender, "event received");
+			}
+
+			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
 			
 		}
 		if (event.postback) {
