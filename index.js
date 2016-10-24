@@ -125,6 +125,7 @@ function sendGenericMessage(sender) {
 MongoClient.connect(mongodbLink, function(err, database) {
 	if (err) {return console.log(err);}
 	db = database;
+	events = db.collection("events");
 	// index
 	app.get('/', function (req, res) {
 		res.status(200).send('hello I\'m very sexy bot')
@@ -158,7 +159,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
 				if (text.substring(0,6) === "/event") {
 					//what to do with events
-					db.collection("events").save({"one":"two"}, function(err, result) {
+					events.save({"one":"two"}, function(err, result) {
 						if (err) {return console.log(err);}
 						sendTextMessage(sender, "Saved to DB");
 					})
