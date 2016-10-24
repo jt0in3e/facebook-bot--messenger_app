@@ -45,13 +45,13 @@ app.post('/webhook/', function (req, res) {
 			//it is here only for testing how it works
 			if (text.substring(0,5) === "/post") {
 				postFeed(283148272070769, text.substring(6));
-				continue;
+				break;
 			}
 
 			if (text.substring(0,6) === "/event") {
 				//what to do with events
 				sendTextMessage(sender, "event received");
-				return;
+				break;
 			}
 
 			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
