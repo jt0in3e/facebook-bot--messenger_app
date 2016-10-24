@@ -6,6 +6,7 @@ const request = require('request')
 const app = express()
 const MongoClient = require("mongodb").MongoClient
 let db = ""
+let events = ""
 // for facebook verification 
 /*it's better to setup environment variable i.e.
 var verificationToken = process.env.VERIFY_TOKEN on you app's server*/
