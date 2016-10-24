@@ -51,6 +51,7 @@ app.post('/webhook/', function (req, res) {
 			if (text.substring(0,6) === "/event") {
 				//what to do with events
 				sendTextMessage(sender, "event received");
+				return;
 			}
 
 			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
