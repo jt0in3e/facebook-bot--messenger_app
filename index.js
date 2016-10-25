@@ -66,8 +66,8 @@ function postFeed(pageId, text) {
 	})
 }
 
-function handleEvent(action, collection, sender) {
-	collection.action({"fromFN":"it works"}, function(err, result) {
+function handleEvent(action, sender) {
+	this.action({"fromFN":"it works"}, function(err, result) {
 		if (err) {return console.log(err);}
 		console.log("saved to database");
 		sendTextMessage(sender, "Saved to DB")
@@ -161,7 +161,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
 				if (text.substring(0,6) === "/event") {
 					//what to do with events
-					handleEvent("save", events, sender)
+					events.handleEvent("save", sender);
 					break;
 				}
 
