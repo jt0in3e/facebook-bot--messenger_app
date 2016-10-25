@@ -66,12 +66,15 @@ function postFeed(pageId, text) {
 	})
 }
 
-function handleEvent(action, sender) {
-	this.action({"fromFN":"it works"}, function(err, result) {
-		if (err) {return console.log(err);}
-		console.log("saved to database");
-		sendTextMessage(sender, "Saved to DB")
-	})
+function handleEvent(collection, action, sender) {
+	if (action === "save") {
+	  collection.save({"fromFN":"it works"}, function(err, result) {
+	  if (err) {return console.log(err);}
+	  console.log("saved to database");
+	  sendTextMessage(sender, "Saved to DB")
+	  })
+	}
+
 }
 
 function sendGenericMessage(sender) {
@@ -161,7 +164,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
 				if (text.substring(0,6) === "/event") {
 					//what to do with events
-					events.handleEvent("save", sender);
+					handleEvent(events, "save", sender);
 					break;
 				}
 
