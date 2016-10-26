@@ -66,10 +66,11 @@ function postFeed(pageId, text) {
 	})
 }
 
+//function to create event from messenger, save it to DB and post on page
 function createEvent(collection, date, sender) {
 	  let reg = /\d\d\/\d\d\/\d\d\d\d\//;
 	  if (!reg.test(date)) {
-	  	sendTextMessage(sender, "Please enter valid format, i.e. DD/MM/YYYY");
+	  	sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
 	  	return false;
 	  }
 	  let query = {};
@@ -83,6 +84,16 @@ function createEvent(collection, date, sender) {
 	  let t = "saved " + Object.keys(query)[0] + " to database"
 	  sendTextMessage(sender, t)
 	  })
+}
+
+//function to get info on all registered to the event
+function showRegistered(collection, sender) {
+	let cursor = collection.find();
+	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
+	cursor.toArray(function(err, result) {
+		if (err) {return sendTextMessage(sender, "Err " +err)}
+		sendTextMessage(sender, results);
+	})
 }
 
 function sendGenericMessage(sender) {
@@ -174,6 +185,10 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					//what to do with events
 					createEvent(events, text.substring(7), sender);
 					break;
+				}
+
+				if (text.substring(0,5) === "/list") {
+					showRegistered(events, sender);
 				}
 
 				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
