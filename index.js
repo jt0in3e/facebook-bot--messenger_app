@@ -67,12 +67,13 @@ function postFeed(pageId, text) {
 }
 
 function handleEvent(collection, date, sender) {
-	  collection.save({date:{"registered":0,
-							 "personsRegistered":[],
-							 "eventLink": "#"}}, function(err, result) {
+	  let query[date] = {"registered":0,
+			     "personsRegistered":[],
+			     "eventLink": "#"};
+	  collection.save(query, function(err, result) {
 	  if (err) {return console.log(err);}
 	  console.log("saved to database");
-	  let t = "saved" + date + "to database"
+	  let t = "saved" + query + "to database"
 	  sendTextMessage(sender, t)
 	  })
 }
