@@ -4,6 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
+const JSONbig = require('json-bigint')
 const MongoClient = require("mongodb").MongoClient
 let db = ""
 let events = ""
@@ -166,10 +167,11 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
 	// to post data back to FB
 	app.post('/webhook/', function (req, res) {
-		let messaging_events = req.body.entry[0].messaging
+		let data = JSONbig.parse(req.body);
+		let messaging_events = data.entry[0].messaging
 		for (let i = 0; i < messaging_events.length; i++) {
-			let event = req.body.entry[0].messaging[i]
-			let sender = event.sender.id
+			let event = data.entry[0].messaging[i]
+			let sender = event.sender.id.toString();
 			if (event.message && event.message.text) {
 				let text = event.message.text
 				if (text === 'generic') {
