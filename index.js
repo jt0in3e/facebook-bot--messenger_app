@@ -72,6 +72,7 @@ function handleEvent(collection, date, sender) {
 							 "eventLink": "#"}}, function(err, result) {
 	  if (err) {return console.log(err);}
 	  console.log("saved to database");
+	  let t = "saved" + date + "to database"
 	  sendTextMessage(sender, "Saved to DB")
 	  })
 }
