@@ -66,7 +66,7 @@ function postFeed(pageId, text) {
 	})
 }
 
-function handleEvent(collection, date, sender) {
+function createEvent(collection, date, sender) {
 	  let query = {};
 	  query[date] = {"registered":0,
 			     "personsRegistered":[],
@@ -74,7 +74,7 @@ function handleEvent(collection, date, sender) {
 	  collection.save(query, function(err, result) {
 	  if (err) {return console.log(err);}
 	  console.log("saved to database");
-	  let t = "saved" + query + "to database"
+	  let t = "saved" + Object.keys(query)[0] + "to database"
 	  sendTextMessage(sender, t)
 	  })
 }
@@ -166,7 +166,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
 				if (text.substring(0,6) === "/event") {
 					//what to do with events
-					handleEvent(events, text.substring(7), sender);
+					createEvent(events, text.substring(7), sender);
 					break;
 				}
 
