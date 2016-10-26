@@ -73,7 +73,7 @@ function handleEvent(collection, date, sender) {
 	  if (err) {return console.log(err);}
 	  console.log("saved to database");
 	  let t = "saved" + date + "to database"
-	  sendTextMessage(sender, l)
+	  sendTextMessage(sender, t)
 	  })
 }
 
