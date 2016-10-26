@@ -67,7 +67,8 @@ function postFeed(pageId, text) {
 }
 
 function handleEvent(collection, date, sender) {
-	  let query[date] = {"registered":0,
+	  let query = {};
+	  query[date] = {"registered":0,
 			     "personsRegistered":[],
 			     "eventLink": "#"};
 	  collection.save(query, function(err, result) {
