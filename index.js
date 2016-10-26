@@ -67,6 +67,11 @@ function postFeed(pageId, text) {
 }
 
 function createEvent(collection, date, sender) {
+	  let reg = /\d\d\/\d\d\/\d\d\d\d\//;
+	  if (!reg.test(date)) {
+	  	sendTextMessage(sender, "Please enter valid format, i.e. DD/MM/YYYY");
+	  	return false;
+	  }
 	  let query = {};
 	  query[date] = {"registered":0,
 			     "personsRegistered":[],
