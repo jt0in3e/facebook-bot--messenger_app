@@ -74,7 +74,8 @@ function createEvent(collection, date, sender) {
 	  collection.save(query, function(err, result) {
 	  if (err) {return console.log(err);}
 	  console.log("saved to database");
-	  let t = "saved" + Object.keys(query)[0] + "to database"
+	  postFeed(283148272070769, date)
+	  let t = "saved " + Object.keys(query)[0] + " to database"
 	  sendTextMessage(sender, t)
 	  })
 }
