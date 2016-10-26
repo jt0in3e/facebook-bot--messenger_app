@@ -59,9 +59,9 @@ function postFeed(pageId, text) {
 		}
 	}, function(error, response, body) {
 		if (error) {
-			console.log('Error posting message to page: ', error)
+			console.log('Error posting message to page from postFeed fn: ', error)
 		} else if (response.body.error) {
-			console.log('Error: ', response.body.error)
+			console.log('Error from postFeed fn: ', response.body.error)
 		}
 	})
 }
