@@ -68,12 +68,12 @@ function postFeed(pageId, text) {
 
 //function to create event from messenger, save it to DB and post on page
 function createEvent(collection, date, sender) {
-	  /*console.log(typeof date);
+	  console.log(typeof date);
 	  let reg = /\d\d\/\d\d\/\d\d\d\d/;
 	  if (!reg.test(date)) {
 	  	sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
 	  	return false;
-	  }*/
+	  }
 	  let query = {};
 	  query[date] = {"registered":0,
 			     "personsRegistered":[],
