@@ -94,6 +94,7 @@ function showRegistered(collection, sender) {
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
 	cursor.toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
+		console.log(result[0]);
 		sendTextMessage(sender, result[0]);
 	})
 }
