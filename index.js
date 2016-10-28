@@ -90,7 +90,7 @@ function createEvent(collection, date, sender) {
 //function to get info on all registered to the event
 function showRegistered(collection, sender) {
 	console.log("SHOW REGISTERED STARTED")
-	let cursor = collection.find("29/10/2016":"registered");
+	let cursor = collection.find({"29/10/2016.registered":0});
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
 	cursor.toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
@@ -150,7 +150,7 @@ function sendGenericMessage(sender) {
 
 // connect to mongoDB & start server
 MongoClient.connect(mongodbLink, function(err, database) {
-	if (err) {return console.log(err);}
+	if (err) {return console.log("This is DB Error \n" + err);}
 	db = database;
 	events = db.collection("events");
 	// index
