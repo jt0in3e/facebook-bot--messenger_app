@@ -92,7 +92,11 @@ function showRegistered(collection, sender) {
 	console.log("SHOW REGISTERED STARTED")
 	let cursor = collection.find({"29/10/2016.registered":{$exists:true}}, {_id:0, "registered":1});
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
-	sendTextMessage(sender, cursor["29/10/2016"]["registered"]);
+	cursor.toArray(function(err, result) {
+		if (err) {return sendTextMessage(sender, "Err " +err)}
+		console.log(result);
+		sendTextMessage(sender, result);
+	})
 }
 
 function sendGenericMessage(sender) {
