@@ -93,9 +93,14 @@ function showRegistered(collection, sender) {
 	let cursor = collection.find({"29/10/2016.registered":{$exists:true}}, {_id:0, "registered":1});
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
 	cursor.toArray(function(err, result) {
+		let obj = "";
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		console.log(result);
-		sendTextMessage(sender, result);
+		for (let i=0; i<result.length; i++) {
+			obj+=JSON.stringify(result[i]);
+			obj+="\n";
+		}
+		sendTextMessage(sender, obj);
 	})
 }
 
