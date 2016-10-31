@@ -90,17 +90,12 @@ function createEvent(collection, date, sender) {
 //function to get info on all registered to the event
 function showRegistered(collection, sender) {
 	console.log("SHOW REGISTERED STARTED")
-	let cursor = collection.find({"29/10/2016.registered":{$exists:true}}, {_id:0, "registered":1});
+	let cursor = collection.find({"29/10/2016":{$exists:true}});
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
 	cursor.toArray(function(err, result) {
-		let obj = "";
 		if (err) {return sendTextMessage(sender, "Err " +err)}
-		console.log(result);
-		for (let i=0; i<result.length; i++) {
-			obj+=JSON.stringify(result[i]);
-			obj+="\n";
-		}
-		sendTextMessage(sender, obj);
+		console.log(result[0]);
+		sendTextMessage(sender, result[0]["29/10/2016"]["registered"]);
 	})
 }
 
