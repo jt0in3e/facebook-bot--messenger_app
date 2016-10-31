@@ -91,7 +91,7 @@ function createEvent(collection, date, sender) {
 function showRegistered(collection, sender, date) {
 	console.log("SHOW REGISTERED STARTED");
 	let DATE = new Date();
-	let today = DATE.getDate()+ "/" + DATE.getMonth()+ 1 + "/" + DATE.getFullYear();
+	let today = DATE.getDate()+ "/" + parseInt(DATE.getMonth())+ 1 + "/" + DATE.getFullYear();
 	console.log("TODAY is: " + today)
 	let cursor = collection.find({});
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
