@@ -88,14 +88,17 @@ function createEvent(collection, date, sender) {
 }
 
 //function to get info on all registered to the event
-function showRegistered(collection, sender) {
-	console.log("SHOW REGISTERED STARTED")
-	let cursor = collection.find({"29/10/2016":{$exists:true}});
+function showRegistered(collection, sender, date) {
+	console.log("SHOW REGISTERED STARTED");
+	let DATE = new Date();
+	let today = DATE.getDate()+ "/" + DATE.getMonth()+ 1 + "/" + DATE.getFullYear();
+	console.log("TODAY is: " + today)
+	let cursor = collection.find({});
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
 	cursor.toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		console.log(result[0]);
-		sendTextMessage(sender, result[0]["29/10/2016"]["registered"]);
+		sendTextMessage(sender, result[0]);
 	})
 }
 
@@ -191,7 +194,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				}
 
 				if (text.substring(0,5) === "/list") {
-					showRegistered(events, sender);
+					showRegistered(events, sender, text.substring(6));
 				}
 
 				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
