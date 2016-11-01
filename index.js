@@ -113,8 +113,9 @@ function showRegistered(collection, sender, date) {
 	let query = {};
 	if (date === "today") {
 		query[today]={$exists: true}
-	} else {
-		query = {};
+	} else if (!testDates(date)) {
+		sendTextMessage(sender, "NOT FOUND, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY), relevant command (e.g. /registered 01/01/2016 or /registered today) and try again");
+	  	return false;
 	}
 	let cursor = collection.find(query);
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
