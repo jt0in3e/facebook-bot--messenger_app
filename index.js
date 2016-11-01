@@ -30,7 +30,7 @@ app.use(bodyParser.json())
 Function to be used in code
 */
 function sendTextMessage(sender, text) {
-	let messageData = { text:text + "\nMother fuck\n"}
+	let messageData = { text:text }
 	
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -119,7 +119,7 @@ function showRegistered(collection, sender, date) {
 		console.log("Here results for db: "+result[0]);
 		for (let nb=0; nb<result.length; nb++) {
 		      let keys = Object.keys(result[nb])[1];
-		      sendTextMessage(sender, "For " + keys + "was registered: " + result[nb][keys]["registered"]+ "\n");
+		      sendTextMessage(sender, "-------\nFor " + keys + " was registered: " + result[nb][keys]["registered"]+ "\n");
 		}
 		
 	})
