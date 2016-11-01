@@ -87,7 +87,8 @@ function createEvent(collection, date, sender) {
 	  let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
 	  let queryTest = {};
 	  queryTest[date] = {$exists: true};
-	  if (collection.find(queryTest, {limit: 1}).count()) { /* this checks taken from http://stackoverflow.com/questions/36136852/check-if-collection-find-return-a-cursor*/
+	  if (collection.count(queryTest)) { 
+	  	console.log("COUNT: " + collection.count(queryTest))
 	  	sendTextMessage(sender, "Event already exists"); 
 	  	return false;
 	  }
