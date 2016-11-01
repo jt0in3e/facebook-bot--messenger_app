@@ -118,8 +118,8 @@ function showRegistered(collection, sender, date) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		console.log("Here results for db: "+result[0]);
 		for (let nb=0; nb<result.length; nb++) {
-		      let keys = Object.keys(result[nb])[0];
-		      sendTextMessage(sender, keys + "\n");
+		      let keys = Object.keys(result[nb])[1];
+		      sendTextMessage(sender, "For " + keys + "was registered: " + result[nb][keys]["registered"]+ "\n");
 		}
 		
 	})
