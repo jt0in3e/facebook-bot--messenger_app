@@ -87,8 +87,9 @@ function createEvent(collection, date, sender) {
 	  let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
 	  let queryTest = {};
 	  queryTest[date] = {$exists: true};
-	  if (collection.count(queryTest)) { 
-	  	console.log("COUNT: " + collection.count(queryTest))
+	  let ex = collection.find(queryTest).limit(1).size(); //trying this to find check solution http://stackoverflow.com/questions/8389811/how-to-query-mongodb-to-test-if-an-item-exists
+	  if (ex) { 
+	  	console.log("COUNT: " + ex)
 	  	sendTextMessage(sender, "Event already exists"); 
 	  	return false;
 	  }
