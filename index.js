@@ -78,12 +78,14 @@ function testDates(date) {
 
 //function to create event from messenger, save it to DB and post on page
 function createEvent(collection, date, sender) {
-	  console.log(typeof date);
-	  if (date === "today") {date = getCurrentDate()}
-	  if (!testDates(date)) {
+	  console.log("Date at the beggining: " date);
+	  if (date === "today") {
+	  	date = getCurrentDate();
+	  } else if (!testDates(date)) {
 	  	sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
 	  	return false;
 	  }
+	  console.log("date after " + date)
 	  let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
 	  let queryTest = {};
 	  queryTest[date] = {$exists: true};
