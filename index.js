@@ -87,18 +87,31 @@ function createEvent(collection, date, sender) {
 	  })
 }
 
+//fn to get current date
+function getCurrentDate() {
+	let DATE = new Date();
+	let today = ("0"+DATE.getDate()).slice(-2)+ "/" + ("0"+(DATE.getMonth()+ 1)).slice(-2) + "/" + DATE.getFullYear();
+	return today;
+}
+
+//fn to create object to insert in find fild
+function objectToQuery(field, value) {
+	return {field:value}
+}
+
 //function to get info on all registered to the event
 function showRegistered(collection, sender, date) {
 	console.log("SHOW REGISTERED STARTED");
-	let DATE = new Date();
-	let today = ("0"+DATE.getDate()).slice(-2)+ "/" + ("0"+(DATE.getMonth()+ 1)).slice(-2) + "/" + DATE.getFullYear();
+	let today = getCurrentDate();
 	console.log("TODAY is: " + today)
-	let cursor = collection.find({});
+	let query = {};
+	if (date === "today") {query[today]={$exists: true}}
+	let cursor = collection.find(query);
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
 	cursor.toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		console.log("Here results for db: "+result[0]);
-		sendTextMessage(sender, result[0]);
+		sendTextMessage(sender, result[0][today]["registered"]);
 	})
 }
 
@@ -195,6 +208,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
 				if (text.substring(0,5) === "/list") {
 					showRegistered(events, sender, text.substring(6));
+					break;
 				}
 
 				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
