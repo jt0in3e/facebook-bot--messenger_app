@@ -117,7 +117,7 @@ function showRegistered(collection, sender, date) {
 	cursor.toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		console.log("Here results for db: "+result[0]);
-		sendTextMessage(sender, result[0]);
+		sendTextMessage(sender, result[0][today]);
 	})
 }
 
