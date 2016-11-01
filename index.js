@@ -105,7 +105,7 @@ function objectToQuery(field, value) {
 function showRegistered(collection, sender, date) {
 	console.log("SHOW REGISTERED STARTED");
 	let today = getCurrentDate();
-	console.log("TODAY is: " + today)
+	console.log("TODAY is: " + today + " & typeof " + typeof today)
 	let query = {};
 	if (date === "today") {
 		query[today]={$exists: true}
@@ -117,7 +117,7 @@ function showRegistered(collection, sender, date) {
 	cursor.toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		console.log("Here results for db: "+result[0]);
-		sendTextMessage(sender, result[0][today]["registered"]);
+		sendTextMessage(sender, result[0]);
 	})
 }
 
