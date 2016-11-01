@@ -105,9 +105,6 @@ function objectToQuery(field, value) {
 	return obj;
 }
 
-//fn to find events in collection
-
-
 //function to get info on all registered to the event
 function showRegistered(collection, sender, date) {
 	console.log("SHOW REGISTERED STARTED");
@@ -176,8 +173,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					break;
 				}
 
-				if (text.substring(0,5) === "/list") {
-					showRegistered(events, sender, text.substring(6));
+				if (text.substring(0,11) === "/registered") {
+					showRegistered(events, sender, text.substring(12));
 					break;
 				}
 
