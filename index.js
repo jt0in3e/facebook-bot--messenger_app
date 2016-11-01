@@ -31,7 +31,7 @@ app.use(bodyParser.json())
 /*
 Functions to be used in code
 */
-
+//fn to send back info to sender in messenger
 function sendTextMessage(sender, text) {
 	let messageData = { text:text }
 	
@@ -52,6 +52,7 @@ function sendTextMessage(sender, text) {
 	})
 }
 
+//fn to post  text to page
 function postFeed(pageId, text) {
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/feed',
@@ -78,17 +79,22 @@ function testDates(date) {
 //function to create event from messenger, save it to DB and post on page
 function createEvent(collection, date, sender) {
 	  console.log(typeof date);
+	  if (date === "today") {date = getCurrentDate()}
 	  if (!testDates(date)) {
 	  	sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
 	  	return false;
 	  }
 	  let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
+	  let queryTest = {};
+	  queryTest[date] = {$exists: true};
+	  let cursor = collection.find(queryTest);
+	  if (cursor) {sendTextMessage(sender, "Event already exists"); return false}
 	  collection.save(query, function(err, result) {
-	  if (err) {return console.log(err);}
-	  console.log("saved to database");
-	  postFeed(pageID, date)
-	  let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
-	  sendTextMessage(sender, t)
+		  if (err) {return console.log(err);}
+		  console.log("saved to database");
+		  postFeed(pageID, date)
+		  let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
+		  sendTextMessage(sender, t)
 	  })
 }
 
@@ -131,7 +137,6 @@ function showRegistered(collection, sender, date) {
 		      let keys = Object.keys(result[nb])[1];
 		      sendTextMessage(sender, "-------\nFor " + keys + " was registered: " + result[nb][keys]["registered"]+ "\n");
 		}
-		
 	})
 }
 
