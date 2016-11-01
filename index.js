@@ -87,8 +87,10 @@ function createEvent(collection, date, sender) {
 	  let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
 	  let queryTest = {};
 	  queryTest[date] = {$exists: true};
-	  let cursor = collection.find(queryTest);
-	  if (cursor) {sendTextMessage(sender, "Event already exists"); return false}
+	  if (collection.find(queryTest, {limit: 1}).count()) { /* this checks taken from http://stackoverflow.com/questions/36136852/check-if-collection-find-return-a-cursor*/
+	  	sendTextMessage(sender, "Event already exists"); 
+	  	return false;
+	  }
 	  collection.save(query, function(err, result) {
 		  if (err) {return console.log(err);}
 		  console.log("saved to database");
