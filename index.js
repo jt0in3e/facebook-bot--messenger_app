@@ -81,10 +81,7 @@ function createEvent(collection, date, sender) {
 	  	sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
 	  	return false;
 	  }
-	  let query = {};
-	  query[date] = {"registered":0,
-			     "personsRegistered":[],
-			     "eventLink": "#"};
+	  let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
 	  collection.save(query, function(err, result) {
 	  if (err) {return console.log(err);}
 	  console.log("saved to database");
@@ -107,6 +104,9 @@ function objectToQuery(field, value) {
 	obj[field] = value;
 	return obj;
 }
+
+//fn to find events in collection
+
 
 //function to get info on all registered to the event
 function showRegistered(collection, sender, date) {
@@ -166,7 +166,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				} 
 				//it is here only for testing how it works
 				if (text.substring(0,5) === "/post") {
-					postFeed(283148272070769, text.substring(6));
+					postFeed(pageID, text.substring(6));
 					break;
 				}
 
