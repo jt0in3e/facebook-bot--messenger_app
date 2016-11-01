@@ -29,8 +29,9 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 /*
-Function to be used in code
+Functions to be used in code
 */
+
 function sendTextMessage(sender, text) {
 	let messageData = { text:text }
 	
@@ -105,6 +106,14 @@ function objectToQuery(field, value) {
 	return obj;
 }
 
+//fn to find events in collection and return list of events
+function findReturnEvents(collection, query, sender) {
+	let cursor = collection.find(query);
+	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
+	let listOfEvents = cursor.toArray();
+	return listOfEvents;
+}
+
 //function to get info on all registered to the event
 function showRegistered(collection, sender, date) {
 	console.log("SHOW REGISTERED STARTED");
@@ -117,17 +126,16 @@ function showRegistered(collection, sender, date) {
 		sendTextMessage(sender, "NOT FOUND, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY), relevant command (e.g. /registered 01/01/2016 or /registered today) and try again");
 	  	return false;
 	}
-	let cursor = collection.find(query);
-	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
-	cursor.toArray(function(err, result) {
-		if (err) {return sendTextMessage(sender, "Err " +err)}
-		console.log("Here results for db: "+result[0]);
-		for (let nb=0; nb<result.length; nb++) {
-		      let keys = Object.keys(result[nb])[1];
-		      sendTextMessage(sender, "-------\nFor " + keys + " was registered: " + result[nb][keys]["registered"]+ "\n");
+	let ev = findReturnEvents(collection, query, sender);
+	if (!ev) {
+		console.log("No events found. Exiting...");
+		break;
+	} else {
+		for (let nb=0; nb<ev.length; nb++) {
+		      let keys = Object.keys(ev[nb])[1];
+		      sendTextMessage(sender, "-------\nFor " + keys + " was registered: " + ev[nb][keys]["registered"]+ "\n");
 		}
-		
-	})
+	}
 }
 
 
