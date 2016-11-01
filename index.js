@@ -96,7 +96,9 @@ function getCurrentDate() {
 
 //fn to create object to insert in find fild
 function objectToQuery(field, value) {
-	return {field:value}
+	let obj = {};
+	obj[field] = value;
+	return obj;
 }
 
 //function to get info on all registered to the event
@@ -105,7 +107,11 @@ function showRegistered(collection, sender, date) {
 	let today = getCurrentDate();
 	console.log("TODAY is: " + today)
 	let query = {};
-	if (date === "today") {query[today]={$exists: true}}
+	if (date === "today") {
+		query[today]={$exists: true}
+	} else {
+		query = {};
+	}
 	let cursor = collection.find(query);
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
 	cursor.toArray(function(err, result) {
@@ -115,54 +121,7 @@ function showRegistered(collection, sender, date) {
 	})
 }
 
-function sendGenericMessage(sender) {
-	let messageData = {
-		"attachment": {
-			"type": "template",
-			"payload": {
-				"template_type": "generic",
-				"elements": [{
-					"title": "First card",
-					"subtitle": "Element #1 of an hscroll",
-					"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
-					"buttons": [{
-						"type": "web_url",
-						"url": "https://www.messenger.com",
-						"title": "web url"
-					}, {
-						"type": "postback",
-						"title": "Postback",
-						"payload": "Payload for first element in a generic bubble",
-					}],
-				}, {
-					"title": "Second card",
-					"subtitle": "Element #2 of an hscroll",
-					"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
-					"buttons": [{
-						"type": "postback",
-						"title": "Postback",
-						"payload": "Payload for second element in a generic bubble",
-					}],
-				}]
-			}
-		}
-	}
-	request({
-		url: 'https://graph.facebook.com/v2.6/me/messages',
-		qs: {access_token:token},
-		method: 'POST',
-		json: {
-			recipient: {id:sender},
-			message: messageData,
-		}
-	}, function(error, response, body) {
-		if (error) {
-			console.log('Error sending messages: ', error)
-		} else if (response.body.error) {
-			console.log('Error from generic: ', response.body.error)
-		}
-	})
-}
+
 
 // connect to mongoDB & start server
 MongoClient.connect(mongodbLink, function(err, database) {
@@ -229,3 +188,57 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	})
 /*end of MongoClient.connect*/
 })
+
+
+
+
+//for future release
+//fn for geting postcards
+function sendGenericMessage(sender) {
+	let messageData = {
+		"attachment": {
+			"type": "template",
+			"payload": {
+				"template_type": "generic",
+				"elements": [{
+					"title": "First card",
+					"subtitle": "Element #1 of an hscroll",
+					"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+					"buttons": [{
+						"type": "web_url",
+						"url": "https://www.messenger.com",
+						"title": "web url"
+					}, {
+						"type": "postback",
+						"title": "Postback",
+						"payload": "Payload for first element in a generic bubble",
+					}],
+				}, {
+					"title": "Second card",
+					"subtitle": "Element #2 of an hscroll",
+					"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
+					"buttons": [{
+						"type": "postback",
+						"title": "Postback",
+						"payload": "Payload for second element in a generic bubble",
+					}],
+				}]
+			}
+		}
+	}
+	request({
+		url: 'https://graph.facebook.com/v2.6/me/messages',
+		qs: {access_token:token},
+		method: 'POST',
+		json: {
+			recipient: {id:sender},
+			message: messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error sending messages: ', error)
+		} else if (response.body.error) {
+			console.log('Error from generic: ', response.body.error)
+		}
+	})
+}
