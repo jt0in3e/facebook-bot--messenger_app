@@ -97,7 +97,7 @@ function showRegistered(collection, sender, date) {
 	if (!cursor) {sendTextMessage(sender, "No events found"); return false;}
 	cursor.toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
-		console.log(result[0]);
+		console.log("Here results for db: "+result[0]);
 		sendTextMessage(sender, result[0]);
 	})
 }
