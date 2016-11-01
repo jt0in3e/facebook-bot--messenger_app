@@ -17,6 +17,8 @@ const token = process.env.PAGE_ACCESS_TOKEN;
 const pageFeedToken = process.env.PAGE_FEED_POST_TOKEN;
 //link to mongoDB
 const mongodbLink = process.env.MONGODB_LINK;
+//pageID
+const pageID = process.env.MONGODB_PAGE_ID;
 
 app.set('port', (process.env.PORT || 5000))
 
@@ -66,11 +68,16 @@ function postFeed(pageId, text) {
 	})
 }
 
+//fn to test dates inserted in requests
+function testDates(date) {
+	let reg = /\d\d\/\d\d\/\d\d\d\d/;
+	return reg.test(date);
+}
+
 //function to create event from messenger, save it to DB and post on page
 function createEvent(collection, date, sender) {
 	  console.log(typeof date);
-	  let reg = /\d\d\/\d\d\/\d\d\d\d/;
-	  if (!reg.test(date)) {
+	  if (!testDates(date)) {
 	  	sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
 	  	return false;
 	  }
@@ -81,7 +88,7 @@ function createEvent(collection, date, sender) {
 	  collection.save(query, function(err, result) {
 	  if (err) {return console.log(err);}
 	  console.log("saved to database");
-	  postFeed(283148272070769, date)
+	  postFeed(pageID, date)
 	  let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
 	  sendTextMessage(sender, t)
 	  })
