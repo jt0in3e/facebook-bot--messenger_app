@@ -78,7 +78,7 @@ function testDates(date) {
 
 //function to create event from messenger, save it to DB and post on page
 function createEvent(collection, date, sender) {
-	  console.log("Date at the beggining: " date);
+	  console.log("Date at the beggining: " + date);
 	  if (date === "today") {
 	  	date = getCurrentDate();
 	  } else if (!testDates(date)) {
