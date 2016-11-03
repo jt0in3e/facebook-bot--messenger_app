@@ -90,21 +90,20 @@ function createEvent(collection, date, sender) {
 	  let queryTest = {};
 	  queryTest[date] = {$exists: true};
 	  console.log("queryTest: "+queryTest[date])
-	  let ex = collection.find(queryTest).count(function(err, ex) {
-	  	return ex;
+	  collection.find(queryTest).count(function(err, ex) {
+	  	if (ex) { 
+		  	console.log("COUNT: " + ex);
+		  	sendTextMessage(sender, "Event already exists"); 
+		  	return false;
+	  	}
+	  	collection.save(query, function(err, result) {
+			  if (err) {return console.log(err);}
+			  console.log("saved to database");
+			  postFeed(pageID, date)
+			  let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
+			  sendTextMessage(sender, t)
+	  	})
 	  }); //trying this to find check solution http://stackoverflow.com/questions/8389811/how-to-query-mongodb-to-test-if-an-item-exists
-	  if (ex) { 
-	  	console.log("COUNT: " + ex);
-	  	sendTextMessage(sender, "Event already exists"); 
-	  	return false;
-	  }
-	  collection.save(query, function(err, result) {
-		  if (err) {return console.log(err);}
-		  console.log("saved to database");
-		  postFeed(pageID, date)
-		  let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
-		  sendTextMessage(sender, t)
-	  })
 }
 
 //fn to get current date
