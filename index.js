@@ -72,7 +72,7 @@ function postFeed(pageId, text) {
 
 //fn to test dates inserted in requests
 function testDates(date) {
-	let reg = /\d\d\/\d\d\/\d\d\d\d/;
+	let reg = /^\d\d\/\d\d\/\d\d\d\d$/;
 	return reg.test(date);
 }
 
