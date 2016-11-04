@@ -126,7 +126,7 @@ function showRegistered(collection, sender, date) {
 	let today = getCurrentDate();
 	console.log("TODAY is: " + today + " & typeof " + typeof today)
 	let query = {};
-	if (date === "today") {
+	if (date === "today" || date === "") {
 		query[today]={$exists: true}
 	} else if(date === "") {
 		query = {};
@@ -196,7 +196,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					break;
 				}
 
-				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
+				sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command (print '/help' for details)")
 				
 			}
 			if (event.postback) {
@@ -216,8 +216,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 })
 
 
-
-
+/*
+---------------------------------------------------------
 //for future release
 //fn for geting postcards
 function sendGenericMessage(sender) {
@@ -268,3 +268,5 @@ function sendGenericMessage(sender) {
 		}
 	})
 }
+
+*/
