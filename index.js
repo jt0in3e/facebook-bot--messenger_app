@@ -122,10 +122,13 @@ function objectToQuery(field, value) {
 
 //function to register to event
 function addToEvent(collection, sender) {
+	console.log("Fn addToEvent STARTED!!")
 	let today = getCurrentDate();
 	let query = {};
 	query[today] = {$exists: true};
 	collection.find(query).forEach(function(doc) {
+		console.log("Fn forEach STARTED!!")
+		console.log("DOC[TODAY]: " + doc[today])
 		if (!doc[today]) {sendTextMessage(sender, "Event for current date is not created! \nPlease use '/event' command to add new event for today"); return false;}
 		doc[today]["registered"] += 1;
 		sendTextMessage(sender, "You have beed added!")
@@ -211,6 +214,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
 				if (text.substring(0,4) === "/add" || text[0] === "+") {
 					addToEvent(events, sender); //register to current/today event
+					break;
 				}
 
 				sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
