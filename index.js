@@ -156,7 +156,7 @@ function showRegistered(collection, sender, date) {
 	collection.find(query).toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		console.log("Here results length: "+result.length);
-		if (!result.length) {sendTextMessage(sender, "Event for the " + todate + " not found!"); return false}
+		if (!result.length) {sendTextMessage(sender, "Event for the " + today + " not found!"); return false}
 		for (let nb=0; nb<result.length; nb++) {
 		      let keys = Object.keys(result[nb])[1];
 		      sendTextMessage(sender, "-------\nFor " + keys + " was registered: " + result[nb][keys]["registered"]+ "\n");
