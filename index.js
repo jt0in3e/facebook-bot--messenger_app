@@ -121,7 +121,7 @@ function objectToQuery(field, value) {
 }
 
 //function to get user/sender details using User profile API
-function getSenderData(sender, token) {
+function getSenderData(sender, token, callback) {
 	
 	request({
 		url: 'https://graph.facebook.com/v2.6/' + sender,
@@ -134,7 +134,7 @@ function getSenderData(sender, token) {
 		} else if (response.body.error) {
 			console.log('Error is response: ', response.body.error)
 		} else {
-			return body;
+			callback(body);
 		}
 	})
 }
@@ -240,43 +240,45 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		for (let i = 0; i < messaging_events.length; i++) {
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
-			let userData = getSenderData(sender, token);
-			if (event.message && event.message.text) {
-				let text = event.message.text
-				if (text === 'generic') {
-					sendGenericMessage(sender);
-					continue;
-				} 
-				//it is here only for testing how it works
-				if (text.substring(0,5) === "/post") {
-					postFeed(pageID, text.substring(6));
-					break;
-				}
+			getSenderData(sender, token, function(userData) {
+				if (event.message && event.message.text) {
+					let text = event.message.text
+					if (text === 'generic') {
+						sendGenericMessage(sender);
+						continue;
+					} 
+					//it is here only for testing how it works
+					if (text.substring(0,5) === "/post") {
+						postFeed(pageID, text.substring(6));
+						break;
+					}
 
-				if (text.substring(0,6) === "/event") {
-					//what to do with events
-					createEvent(events, text.substring(7), sender);
-					break;
-				}
+					if (text.substring(0,6) === "/event") {
+						//what to do with events
+						createEvent(events, text.substring(7), sender);
+						break;
+					}
 
-				if (text.substring(0,11) === "/registered") {
-					showRegistered(events, sender, text.substring(12));
-					break;
-				}
+					if (text.substring(0,11) === "/registered") {
+						showRegistered(events, sender, text.substring(12));
+						break;
+					}
 
-				if (text.substring(0,4) === "/add" || text[0] === "+") {
-					addToEvent(events, sender, userData); //register to current/today event
-					break;
-				}
+					if (text.substring(0,4) === "/add" || text[0] === "+") {
+						addToEvent(events, sender, userData); //register to current/today event
+						break;
+					}
 
-				sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
-				
+					sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
+					
+				}
+				if (event.postback) {
+					let text = JSON.stringify(event.postback)
+					sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
+					continue
 			}
-			if (event.postback) {
-				let text = JSON.stringify(event.postback)
-				sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
-				continue
-			}
+
+			});
 		}
 		res.sendStatus(200)
 	})
