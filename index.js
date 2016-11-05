@@ -126,11 +126,12 @@ function addToEvent(collection, sender) {
 	let today = getCurrentDate();
 	let query = {};
 	query[today] = {$exists: true};
-	collection.find(query).forEach(function(doc) {
-		console.log("Fn forEach STARTED!!")
-		console.log("DOC[TODAY]: " + doc[today])
-		if (!doc[today]) {sendTextMessage(sender, "Event for current date is not created! \nPlease use '/event' command to add new event for today"); return false;}
-		doc[today]["registered"] += 1;
+	collection.find(query).toArray(function(err,docs) {
+		if (err) {sendTextMessage(sender, "Smth strange happen.\nPlease try again")}
+		console.log("Fn toArray STARTED!!")
+		console.log("docs[TODAY]: " + docs[today])
+		if (!docs.length) {sendTextMessage(sender, "Event for current date is not created! \nPlease use '/event' command to add new event for today"); return false;}
+		docs[today]["registered"] += 1;
 		sendTextMessage(sender, "You have beed added!")
 	})
 
@@ -155,7 +156,7 @@ function showRegistered(collection, sender, date) {
 	collection.find(query).toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		console.log("Here results length: "+result.length);
-		if (!result.length) {sendTextMessage(sender, "Event for the " + date + " not found!"); return false}
+		if (!result.length) {sendTextMessage(sender, "Event for the " + todate + " not found!"); return false}
 		for (let nb=0; nb<result.length; nb++) {
 		      let keys = Object.keys(result[nb])[1];
 		      sendTextMessage(sender, "-------\nFor " + keys + " was registered: " + result[nb][keys]["registered"]+ "\n");
