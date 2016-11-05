@@ -246,23 +246,19 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					//it is here only for testing how it works
 					if (text.substring(0,5) === "/post") {
 						postFeed(pageID, text.substring(6));
-						break;
 					}
 
 					if (text.substring(0,6) === "/event") {
 						//what to do with events
 						createEvent(events, text.substring(7), sender);
-						break;
 					}
 
 					if (text.substring(0,11) === "/registered") {
 						showRegistered(events, sender, text.substring(12));
-						break;
 					}
 
 					if (text.substring(0,4) === "/add" || text[0] === "+") {
 						addToEvent(events, sender, userData); //register to current/today event
-						break;
 					}
 
 					sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
