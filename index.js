@@ -243,10 +243,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			getSenderData(sender, token, function(userData) {
 				if (event.message && event.message.text) {
 					let text = event.message.text
-					if (text === 'generic') {
-						sendGenericMessage(sender);
-						continue;
-					} 
 					//it is here only for testing how it works
 					if (text.substring(0,5) === "/post") {
 						postFeed(pageID, text.substring(6));
@@ -272,15 +268,9 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 					
 				}
-				if (event.postback) {
-					let text = JSON.stringify(event.postback)
-					sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
-					continue
-			}
-
 			});
-		}
-		res.sendStatus(200)
+		};
+		res.sendStatus(200);
 	})
 
 	//start server
