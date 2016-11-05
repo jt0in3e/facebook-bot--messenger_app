@@ -214,7 +214,32 @@ function showRegistered(collection, sender, date) {
 	})
 }
 
-
+//function to list all registered
+function listRegistered(collection, sender, date) {
+	let today = getCurrentDate();
+	let query = {};
+	if (date === "today" || date === "") {
+		date = today;
+	} else if (!testDates(date)) {
+		sendTextMessage(sender, "Date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY), relevant command (e.g. '/registered 01/01/2016' or '/registered today') and try again");
+	  	return false;
+	}
+	query[date] = {$exists: true};
+	collection.find(query).toArray(function(err, result) {
+		if (err) {return sendTextMessage(sender, "Err " +err)}
+		console.log("Here results length: "+result.length);
+		if (!result.length) {sendTextMessage(sender, "Event for the " + today + " not found!"); return false}
+		let persons = result[0][date]["personsRegistered"];
+		let personsInfo = "";
+		for (let b=0; b<persons.length; b++) {
+			personsInfo += persons[b]["first_name"];
+			personsInfo += " ";
+			personsInfo += persons[b]["last_name"];
+			personsInfo += "\n"
+		}
+		sendTextMessage(sender, "Registered for playing: \n");
+	})
+}
 
 // connect to mongoDB & start server
 MongoClient.connect(mongodbLink, function(err, database) {
@@ -250,6 +275,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						showRegistered(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
 						addToEvent(events, sender, userData); //register to current/today event
+					} else if (text.substring(0,5) === "/list") {
+						listRegistered(events, sender, text.substring(6))
 					} else {
 						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 					}					
