@@ -120,6 +120,19 @@ function objectToQuery(field, value) {
 	return obj;
 }
 
+//function to register to event
+function addToEvent(collection, sender) {
+	let today = getCurrentDate();
+	let query = {};
+	query[today] = {$exists: true};
+	collection.find(query).forEach(function(doc) {
+		if (!doc[today]) {sendTextMessage(sender, "Event for current date is not created! \nPlease use '/event' command to add new event for today"); return false;}
+		doc[today]["registered"] += 1;
+		sendTextMessage(sender, "You have beed added!")
+	})
+
+}
+
 //function to get info on all registered to the event
 function showRegistered(collection, sender, date) {
 	console.log("SHOW REGISTERED STARTED");
@@ -128,10 +141,10 @@ function showRegistered(collection, sender, date) {
 	let query = {};
 	if (date === "today" || date === "") {
 		query[today]={$exists: true}
-	} else if(date === "") {
+	} else if(date === "all") {
 		query = {};
 	} else if (!testDates(date)) {
-		sendTextMessage(sender, "NOT FOUND, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY), relevant command (e.g. /registered 01/01/2016 or /registered today) and try again");
+		sendTextMessage(sender, "Date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY), relevant command (e.g. '/registered 01/01/2016' or '/registered today') and try again");
 	  	return false;
 	} else {
 		query[date] = {$exists: true}
@@ -139,7 +152,7 @@ function showRegistered(collection, sender, date) {
 	collection.find(query).toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		console.log("Here results length: "+result.length);
-		if (!result.length) {sendTextMessage(sender, "Events not found"); return false}
+		if (!result.length) {sendTextMessage(sender, "Event for the " + date + " not found!"); return false}
 		for (let nb=0; nb<result.length; nb++) {
 		      let keys = Object.keys(result[nb])[1];
 		      sendTextMessage(sender, "-------\nFor " + keys + " was registered: " + result[nb][keys]["registered"]+ "\n");
@@ -196,7 +209,11 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					break;
 				}
 
-				sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command (print '/help' for details)")
+				if (text.substring(0,4) === "/add" || text[0] === "+") {
+					addToEvent(events, sender); //register to current/today event
+				}
+
+				sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 				
 			}
 			if (event.postback) {
