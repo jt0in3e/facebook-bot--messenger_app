@@ -243,26 +243,16 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			getSenderData(sender, token, function(userData) {
 				if (event.message && event.message.text) {
 					let text = event.message.text
-					//it is here only for testing how it works
-					if (text.substring(0,5) === "/post") {
-						postFeed(pageID, text.substring(6));
-					}
-
 					if (text.substring(0,6) === "/event") {
 						//what to do with events
 						createEvent(events, text.substring(7), sender);
-					}
-
-					if (text.substring(0,11) === "/registered") {
+					} else if (text.substring(0,11) === "/registered") {
 						showRegistered(events, sender, text.substring(12));
-					}
-
-					if (text.substring(0,4) === "/add" || text[0] === "+") {
+					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
 						addToEvent(events, sender, userData); //register to current/today event
-					}
-
-					sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
-					
+					} else {
+						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
+					}					
 				}
 			});
 		};
