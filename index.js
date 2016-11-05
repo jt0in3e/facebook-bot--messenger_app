@@ -230,6 +230,7 @@ function listRegistered(collection, sender, date) {
 		console.log("Here results length: "+result.length);
 		if (!result.length) {sendTextMessage(sender, "Event for the " + today + " not found!"); return false}
 		let persons = result[0][date]["personsRegistered"];
+		console.log("Persons list: "+persons)
 		let personsInfo = "";
 		for (let b=0; b<persons.length; b++) {
 			personsInfo += persons[b]["first_name"];
@@ -237,7 +238,8 @@ function listRegistered(collection, sender, date) {
 			personsInfo += persons[b]["last_name"];
 			personsInfo += "\n"
 		}
-		sendTextMessage(sender, "Registered for playing: \n");
+		console.log(personsInfo);
+		sendTextMessage(sender, "Registered for playing: \n" + personsInfo);
 	})
 }
 
