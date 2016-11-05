@@ -122,7 +122,6 @@ function objectToQuery(field, value) {
 
 //function to get user/sender details using User profile API
 function getSenderData(sender, token) {
-	let senderData = {};
 	
 	request({
 		url: 'https://graph.facebook.com/v2.6/' + sender,
@@ -135,13 +134,13 @@ function getSenderData(sender, token) {
 		} else if (response.body.error) {
 			console.log('Error is response: ', response.body.error)
 		} else {
-			console.log(JSON.stringify(body));
+			return body;
 		}
 	})
 }
 
 //function to register person to event
-function addToEvent(collection, sender) {
+function addToEvent(collection, sender, userData) {
 	console.log("Fn addToEvent STARTED!!")
 	let today = getCurrentDate();
 	let query = {};
@@ -151,9 +150,19 @@ function addToEvent(collection, sender) {
 		if (!docs.length) {sendTextMessage(sender, "Event for current date is not created! \nPlease use '/event' command to add new event for today"); return false;}
 		let count = docs[0][today]["registered"];
 		let persons = docs[0][today]["personsRegistered"];
-		count += 1;
 		let replacement = {};
-		replacement[today] = {"registered":count};
+		for (let j=0; j<persons.length; j++) {
+			if (JSON.stringify(userData) === JSON.stringify(persons[j])) {
+				sendTextMessage(sender, "You are already registered");
+				return false;
+			} else {
+				persons.push(userData);
+				count += 1;
+				replacement[today] = {"registered":count,
+									  "personsRegistered":persons};
+			}
+		}
+		
 		collection.findAndModify(query, //query to find 
 									[], //sort order
 									{$set:replacement}, //object to replace
@@ -168,6 +177,7 @@ function addToEvent(collection, sender) {
 									})
 		sendTextMessage(sender, "You have beed added!");
 		console.log(docs[0][today]["registered"]);
+		console.log(docs[0][today]["personsRegistered"])
 	})
 
 }
@@ -225,7 +235,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		for (let i = 0; i < messaging_events.length; i++) {
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
-			getSenderData(sender, token);
+			let userData = getSenderData(sender, token);
 			if (event.message && event.message.text) {
 				let text = event.message.text
 				if (text === 'generic') {
@@ -250,7 +260,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				}
 
 				if (text.substring(0,4) === "/add" || text[0] === "+") {
-					addToEvent(events, sender); //register to current/today event
+					addToEvent(events, sender, userData); //register to current/today event
 					break;
 				}
 
