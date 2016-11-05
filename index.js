@@ -151,15 +151,20 @@ function addToEvent(collection, sender, userData) {
 		let count = docs[0][today]["registered"];
 		let persons = docs[0][today]["personsRegistered"];
 		let replacement = {};
-		for (let j=0; j<persons.length; j++) {
-			if (JSON.stringify(userData) === JSON.stringify(persons[j])) {
-				sendTextMessage(sender, "You are already registered");
-				return false;
-			} else {
-				persons.push(userData);
-				count += 1;
-				replacement[today] = {"registered":count,
-									  "personsRegistered":persons};
+		if (!persons.length) {
+			replacement[today] = {"registered": 1,
+								  "personsRegistered":[userData]}
+		} else {
+			for (let j=0; j<persons.length; j++) {
+				if (JSON.stringify(userData) === JSON.stringify(persons[j])) {
+					sendTextMessage(sender, "You are already registered");
+					return false;
+				} else {
+					persons.push(userData);
+					count += 1;
+					replacement[today] = {"registered":count,
+										  "personsRegistered":persons};
+				}
 			}
 		}
 		
