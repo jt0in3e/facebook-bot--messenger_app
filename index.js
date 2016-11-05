@@ -120,6 +120,26 @@ function objectToQuery(field, value) {
 	return obj;
 }
 
+//function to get user/sender details using User profile API
+function getSenderData(sender, token) {
+	let senderData = {};
+	
+	request({
+		url: 'https://graph.facebook.com/v2.6/' + sender,
+		qs: {access_token:token,
+			fields: "first_name, last_name"},
+		method: 'GET'
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error is error: ', error)
+		} else if (response.body.error) {
+			console.log('Error is response: ', response.body.error)
+		} else {
+			console.log(JSON.stringify(body));
+		}
+	})
+}
+
 //function to register person to event
 function addToEvent(collection, sender) {
 	console.log("Fn addToEvent STARTED!!")
@@ -148,6 +168,7 @@ function addToEvent(collection, sender) {
 									})
 		sendTextMessage(sender, "You have beed added!");
 		console.log(docs[0][today]["registered"]);
+		getSenderData(sender, token);
 	})
 
 }
@@ -205,7 +226,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		for (let i = 0; i < messaging_events.length; i++) {
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
-			console.log("SENDER ID: " + sender)
+			let senderData = 
 			if (event.message && event.message.text) {
 				let text = event.message.text
 				if (text === 'generic') {
