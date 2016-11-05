@@ -131,7 +131,7 @@ function addToEvent(collection, sender) {
 		console.log("Fn toArray STARTED!!")
 		console.log("docs[TODAY]: " + docs[today])
 		if (!docs.length) {sendTextMessage(sender, "Event for current date is not created! \nPlease use '/event' command to add new event for today"); return false;}
-		docs[today]["registered"] += 1;
+		docs[0][today]["registered"] += 1;
 		sendTextMessage(sender, "You have beed added!")
 	})
 
