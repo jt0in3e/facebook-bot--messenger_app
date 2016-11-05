@@ -168,7 +168,6 @@ function addToEvent(collection, sender) {
 									})
 		sendTextMessage(sender, "You have beed added!");
 		console.log(docs[0][today]["registered"]);
-		getSenderData(sender, token);
 	})
 
 }
@@ -226,7 +225,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		for (let i = 0; i < messaging_events.length; i++) {
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
-			let senderData = 
+			getSenderData(sender, token);
 			if (event.message && event.message.text) {
 				let text = event.message.text
 				if (text === 'generic') {
