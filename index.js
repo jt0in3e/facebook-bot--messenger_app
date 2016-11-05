@@ -79,7 +79,7 @@ function testDates(date) {
 //function to create event from messenger, save it to DB and post on page
 function createEvent(collection, date, sender) {
 	  console.log("Date at the beggining: " + date);
-	  if (date === "today") {
+	  if (date === "today" || date === "") {
 	  	date = getCurrentDate();
 	  } else if (!testDates(date)) {
 	  	sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
@@ -120,7 +120,7 @@ function objectToQuery(field, value) {
 	return obj;
 }
 
-//function to register to event
+//function to register person to event
 function addToEvent(collection, sender) {
 	console.log("Fn addToEvent STARTED!!")
 	let today = getCurrentDate();
@@ -130,6 +130,7 @@ function addToEvent(collection, sender) {
 		if (err) {sendTextMessage(sender, "Smth strange happen.\nPlease try again")}
 		if (!docs.length) {sendTextMessage(sender, "Event for current date is not created! \nPlease use '/event' command to add new event for today"); return false;}
 		let count = docs[0][today]["registered"];
+		let persons = docs[0][today]["personsRegistered"];
 		count += 1;
 		let replacement = {};
 		replacement[today] = {"registered":count};
@@ -151,11 +152,11 @@ function addToEvent(collection, sender) {
 
 }
 
+
+
 //function to get info on all registered to the event
 function showRegistered(collection, sender, date) {
-	console.log("SHOW REGISTERED STARTED");
 	let today = getCurrentDate();
-	console.log("TODAY is: " + today + " & typeof " + typeof today)
 	let query = {};
 	if (date === "today" || date === "") {
 		query[today]={$exists: true}
@@ -204,6 +205,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		for (let i = 0; i < messaging_events.length; i++) {
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
+			console.log("SENDER ID: " + sender)
 			if (event.message && event.message.text) {
 				let text = event.message.text
 				if (text === 'generic') {
