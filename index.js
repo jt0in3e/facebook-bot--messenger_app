@@ -155,17 +155,17 @@ function addToEvent(collection, sender, userData) {
 			replacement[today] = {"registered": 1,
 								  "personsRegistered":[userData]}
 		} else {
+			console.log("ELSE in persons comparison began")
 			for (let j=0; j<persons.length; j++) {
-				if (JSON.stringify(userData) === JSON.stringify(persons[j])) {
+				console.log("Persons last_name: " + persons[j]["last_name"])
+				if (userData["last_name"] === persons[j]["last_name"]) {
 					sendTextMessage(sender, "You are already registered");
 					return false;
-				} else {
-					persons.push(userData);
-					count += 1;
-					replacement[today] = {"registered":count,
-										  "personsRegistered":persons};
 				}
 			}
+			persons.push(userData);
+			count += 1;
+			replacement[today] = {"registered":count, "personsRegistered":persons};
 		}
 		
 		collection.findAndModify(query, //query to find 
