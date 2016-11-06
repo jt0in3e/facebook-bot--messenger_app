@@ -231,7 +231,7 @@ function listRegistered(collection, sender, date) {
 		if (!result.length) {sendTextMessage(sender, "Event for the " + today + " not found!"); return false}
 		let persons = result[0][date]["personsRegistered"];
 		console.log("Persons list: "+persons)
-		console.log("Person last_name in [0]: " + json(persons[0]))
+		console.log("Person last_name in [0]: " + persons[0].last_name)
 		let personsInfo = "";
 		for (let b=0; b<persons.length; b++) {
 			personsInfo += persons[b]["first_name"];
