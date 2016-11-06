@@ -152,6 +152,7 @@ function addToEvent(collection, sender, userData) {
 		let persons = docs[0][today]["personsRegistered"];
 		let replacement = {};
 		if (!persons.length) {
+			userData["count"] = 1;
 			replacement[today] = {"registered": 1,
 								  "personsRegistered":[userData]}
 		} else {
@@ -163,8 +164,9 @@ function addToEvent(collection, sender, userData) {
 					return false;
 				}
 			}
-			persons.push(userData);
 			count += 1;
+			userData["count"] = count;
+			persons.push(userData);
 			replacement[today] = {"registered":count, "personsRegistered":persons};
 		}
 		
@@ -181,8 +183,6 @@ function addToEvent(collection, sender, userData) {
 										}
 									})
 		sendTextMessage(sender, "You have beed added!");
-		console.log(docs[0][today]["registered"]);
-		console.log(docs[0][today]["personsRegistered"])
 	})
 
 }
@@ -205,7 +205,6 @@ function showRegistered(collection, sender, date) {
 	}
 	collection.find(query).toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
-		console.log("Here results length: "+result.length);
 		if (!result.length) {sendTextMessage(sender, "Event for the " + today + " not found!"); return false}
 		for (let nb=0; nb<result.length; nb++) {
 		      let keys = Object.keys(result[nb])[1];
@@ -227,11 +226,8 @@ function listRegistered(collection, sender, date) {
 	query[date] = {$exists: true};
 	collection.find(query).toArray(function(err, result) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
-		console.log("Here results length: "+result.length);
 		if (!result.length) {sendTextMessage(sender, "Event for the " + today + " not found!"); return false}
 		let persons = result[0][date]["personsRegistered"];
-		console.log("Persons list: "+ typeof persons)
-		console.log("Person last_name in [0]: " + typeof persons[0])
 		let personsInfo = "";
 		for (let b=0; b<persons.length; b++) {
 			personsInfo += persons[b]["first_name"];
@@ -239,7 +235,6 @@ function listRegistered(collection, sender, date) {
 			personsInfo += persons[b]["last_name"];
 			personsInfo += "\n"
 		}
-		console.log(personsInfo);
 		sendTextMessage(sender, "Registered for playing: \n" + personsInfo);
 	})
 }
