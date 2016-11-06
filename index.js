@@ -269,6 +269,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
+				userData = JSON.parse(userData);
 				if (event.message && event.message.text) {
 					let text = event.message.text
 					if (text.substring(0,6) === "/event") {
