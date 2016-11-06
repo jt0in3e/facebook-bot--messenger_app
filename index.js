@@ -230,8 +230,8 @@ function listRegistered(collection, sender, date) {
 		console.log("Here results length: "+result.length);
 		if (!result.length) {sendTextMessage(sender, "Event for the " + today + " not found!"); return false}
 		let persons = result[0][date]["personsRegistered"];
-		console.log("Persons list: "+persons)
-		console.log("Person last_name in [0]: " + persons[0].last_name)
+		console.log("Persons list: "+ typeof persons)
+		console.log("Person last_name in [0]: " + typeof persons[0])
 		let personsInfo = "";
 		for (let b=0; b<persons.length; b++) {
 			personsInfo += persons[b]["first_name"];
