@@ -310,6 +310,11 @@ function addUserToCollection(collection, userData) {
 
 }
 
+//fn to show help w/ all commands
+function showHelp(sender) {
+	console.log(sender);
+}
+
 // connect to mongoDB & start server
 MongoClient.connect(mongodbLink, function(err, database) {
 	if (err) {return console.log("This is DB Error \n" + err);}
@@ -353,6 +358,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						removeFromEvent(events, sender, userData);
 					} else if (text.substring(0,5) === "/list") {
 						listRegistered(events, sender, text.substring(6))
+					} else if (text.substring(0,6) === "/help") {
+						showHelp(sender);
 					} else {
 						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 					}					
