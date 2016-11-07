@@ -243,7 +243,10 @@ function getSenderData(sender, token, callback) {
 //fn to add user to users collection for further communication
 function addUserToCollection(collection, userData) {
 	let query = {};
-	query[userData["PSID"]] = {$exists: true};
+	let PSID = userData["PSID"];
+	console.log("PSID: " + PSID)
+	query[PSID] = {$exists: true};
+	console.log("Query on PSID: " + JSON.stringify(query));
 	collection.find(query).toArray(function(err, docs) {
 		if (err) {console.log("Smth wrong writing data to users collection. See error\n" + err); return false;}
 		console.log("DOCS in addUserToCollection: " + docs)
