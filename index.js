@@ -246,6 +246,7 @@ function addUserToCollection(collection, userData) {
 	query[userData["PSID"]] = {$exists: true};
 	collection.find(query).toArray(function(err, docs) {
 		if (err) {console.log("Smth wrong writing data to users collection. See error\n" + err); return false;}
+		console.log("DOCS in addUserToCollection: " + docs)
 		if (!docs.length) {
 			collection.insert(userData);
 			console.log("Added user " + userData["PSID"] + " to users")
@@ -278,6 +279,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	app.post('/webhook/', function (req, res) {
 		let messaging_events = req.body.entry[0].messaging
 		for (let i = 0; i < messaging_events.length; i++) {
+			console.log("Messaging_events /i/ : " + i)
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
