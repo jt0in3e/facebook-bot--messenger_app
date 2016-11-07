@@ -169,7 +169,53 @@ function addToEvent(collection, sender, userData) {
 
 }
 
+//remove user from event
+function removeFromEvent(collection, sender, userData) {
+	console.log("Fn removeFromEvent STARTED!!")
+	let today = getCurrentDate();
+	let query = {};
+	query[today] = {$exists: true};
+	collection.find(query).toArray(function(err,docs) {
+		if (err) {sendTextMessage(sender, "Smth strange happen.\nPlease try again")}
+		if (!docs.length) {sendTextMessage(sender, "Event for " +today+ " is not created! \nAnd nobody can't be removed from the event:)"); return false;}
+		let count = docs[0][today]["registered"];
+		let persons = docs[0][today]["personsRegistered"];
+		let replacement = {};
+		let check = false;
+		if (persons.length) {
+			for (let nm=0; nm<persons.length; nm++) {
+				if (persons[nm]["last_name"] === userData["last_name"]) {
+					persons.splice(nm, 1);
+					count-=1;
+					check = true;
+				}
+			}
+			if (!check) {
+				sendTextMessage(sender, "You are not registered to the " + today + " event :( and I can't remove you from list o_O")
+			} else {
+				replacement[today] = {"registered": count,
+								  "personsRegistered":persons}
+			}
+		} else {
+			sendTextMessage(sender, "No one is registered to the " + today + " event")
+		}
+		
+		collection.findAndModify(query, //query to find 
+									[], //sort order
+									{$set:replacement}, //object to replace
+									{}, //options
+									function(err, object) {//fn to callback
+										if (err) {
+											console.warn(err.message);
+											return false;
+										} else {
+											console.dir(object);
+										}
+									})
+		sendTextMessage(sender, "You have beed removed from the event!");
+	})
 
+}
 
 //function to get info on all registered to the event
 function showRegistered(collection, sender, date) {
@@ -263,6 +309,7 @@ function addUserToCollection(collection, userData) {
 	});
 
 }
+
 // connect to mongoDB & start server
 MongoClient.connect(mongodbLink, function(err, database) {
 	if (err) {return console.log("This is DB Error \n" + err);}
@@ -302,6 +349,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						showRegistered(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
 						addToEvent(events, sender, userData); //register to current/today event
+					} else if (text.substring(0,7) === "/remove" || text[0] === "-") { //this fn is to remove user from event
+						removeFromEvent(events, sender, userData);
 					} else if (text.substring(0,5) === "/list") {
 						listRegistered(events, sender, text.substring(6))
 					} else {
