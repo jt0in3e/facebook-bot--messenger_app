@@ -245,7 +245,7 @@ function addUserToCollection(collection, userData) {
 	let query = {};
 	let PSID = userData["PSID"];
 	console.log("PSID: " + PSID)
-	query[PSID] = {$exists: true};
+	query["PSID"] = PSID;
 	console.log("Query on PSID: " + JSON.stringify(query));
 	collection.find(query).toArray(function(err, docs) {
 		if (err) {console.log("Smth wrong writing data to users collection. See error\n" + err); return false;}
