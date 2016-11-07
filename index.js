@@ -191,7 +191,7 @@ function removeFromEvent(collection, sender, userData) {
 				}
 			}
 			if (!check) {
-				sendTextMessage(sender, "You are not registered to the " + today + " event :( and I can't remove you from list o_O")
+				sendTextMessage(sender, "You are not registered to the " + today + " event :( and I can't remove you from list o_O"); return false;
 			} else {
 				replacement[today] = {"registered": count,
 								  "personsRegistered":persons}
