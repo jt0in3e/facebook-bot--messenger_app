@@ -210,6 +210,10 @@ function listRegistered(collection, sender, date) {
 		if (err) {return sendTextMessage(sender, "Err " +err)}
 		if (!result.length) {sendTextMessage(sender, "Event for the " + today + " not found!"); return false}
 		let persons = result[0][date]["personsRegistered"];
+		if (!persons.length) {
+			sendTextMessage(sender, "No one was registered to the event yet");
+			return false;
+		}
 		let personsInfo = "";
 		for (let b=0; b<persons.length; b++) {
 			personsInfo += persons[b]["first_name"];
