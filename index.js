@@ -5,8 +5,9 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 const MongoClient = require("mongodb").MongoClient
-let db = ""
-let events = ""
+let db = "" //for database scope
+let events = "" //for events collection in database
+let users = "" //for users collection in database
 // for facebook verification 
 /*it's better to setup environment variable i.e.
 var verificationToken = process.env.VERIFY_TOKEN on you app's server*/
@@ -120,25 +121,6 @@ function objectToQuery(field, value) {
 	return obj;
 }
 
-//function to get user/sender details using User profile API
-function getSenderData(sender, token, callback) {
-	
-	request({
-		url: 'https://graph.facebook.com/v2.6/' + sender,
-		qs: {access_token:token,
-			fields: "first_name, last_name"},
-		method: 'GET'
-	}, function(error, response, body) {
-		if (error) {
-			console.log('Error is error: ', error)
-		} else if (response.body.error) {
-			console.log('Error is response: ', response.body.error)
-		} else {
-			callback(body);
-		}
-	})
-}
-
 //function to register person to event
 function addToEvent(collection, sender, userData) {
 	console.log("Fn addToEvent STARTED!!")
@@ -239,11 +221,46 @@ function listRegistered(collection, sender, date) {
 	})
 }
 
+//function to get user/sender details using User profile API
+function getSenderData(sender, token, callback) {
+	
+	request({
+		url: 'https://graph.facebook.com/v2.6/' + sender,
+		qs: {access_token:token,
+			fields: "first_name, last_name"},
+		method: 'GET'
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error is error: ', error)
+		} else if (response.body.error) {
+			console.log('Error is response: ', response.body.error)
+		} else {
+			callback(body);
+		}
+	})
+}
+
+//fn to add user to users collection for further communication
+function addUserToCollection(collection, userData) {
+	let query = {};
+	query[userData["PSID"]] = {$exists: true};
+	collection.find(query).toArray(function(err, docs) {
+		if (err) {console.log("Smth wrong writing data to users collection. See error\n" + err); return false;}
+		if (!docs.length) {
+			collection.insert(userData);
+			console.log("Added user " + userData["PSID"] + " to users")
+		} else {
+			console.log("User " + userData["PSID"] + " already in collection");
+		}
+	});
+
+}
 // connect to mongoDB & start server
 MongoClient.connect(mongodbLink, function(err, database) {
 	if (err) {return console.log("This is DB Error \n" + err);}
 	db = database;
 	events = db.collection("events");
+	users = db.collection("users");
 	// index
 	app.get('/', function (req, res) {
 		res.status(200).send('hello I\'m very sexy bot')
@@ -265,6 +282,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
 				userData = JSON.parse(userData);
+				userData["PSID"] = sender;
+				addUserToCollection(users, userData);
 				if (event.message && event.message.text) {
 					let text = event.message.text
 					if (text.substring(0,6) === "/event") {
