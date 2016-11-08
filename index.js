@@ -11,10 +11,10 @@ let users = "" //for users collection in database
 // for facebook verification 
 /*it's better to setup environment variable i.e.
 var verificationToken = process.env.VERIFY_TOKEN on you app's server*/
+const verificationToken = process.env.VERIFY_TOKEN;
 // recommended to inject access tokens as environmental variables, e.g.
 // const token = process.env.PAGE_ACCESS_TOKEN
 const token = process.env.PAGE_ACCESS_TOKEN;
-
 //link to mongoDB
 const mongodbLink = process.env.MONGODB_LINK;
 //pageID
@@ -342,7 +342,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	})
 	//verification test on FB
 	app.get('/webhook/', function (req, res) {
-		if (req.query['hub.verify_token'] === token) {
+		if (req.query['hub.verify_token'] === verificationToken) {
 			res.status(200).send(req.query['hub.challenge'])
 		}
 		res.send('Error, wrong token');
