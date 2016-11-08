@@ -73,6 +73,7 @@ function addPost(pageId, text) {
 
 //fn to remove posts
 function removePost(pageId, postId) {
+	console.log("removePost fn STARTED")
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/' + postId,
 		qs: {access_token:pageFeedToken},
