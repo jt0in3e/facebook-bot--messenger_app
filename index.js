@@ -377,7 +377,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					} else if (text.substring(0,6) === "/help") {
 						showHelp(sender);
 					} else if (text.substring(0,2) === "/r") {
-						removePost(pageID, 283148272070769_315381775514085);
+						removePost(pageID, "283148272070769_315381775514085");
 					} else {
 						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 					}					
