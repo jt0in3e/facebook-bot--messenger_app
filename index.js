@@ -54,7 +54,7 @@ function sendTextMessage(sender, text) {
 }
 
 //fn to post  text to page
-function postFeed(pageId, text) {
+function addPost(pageId, text) {
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/feed',
 		qs: {access_token:pageFeedToken},
@@ -64,9 +64,24 @@ function postFeed(pageId, text) {
 		}
 	}, function(error, response, body) {
 		if (error) {
-			console.log('Error posting message to page from postFeed fn: ', error)
+			console.log('Error posting message to page from addPost fn: ', error)
 		} else if (response.body.error) {
-			console.log('Error from postFeed fn: ', response.body.error)
+			console.log('Error from addPost fn: ', response.body.error)
+		}
+	})
+}
+
+//fn to remove posts
+function removePost(pageId, postId) {
+	request({
+		url: 'https://graph.facebook.com/v2.6/me/' + postId,
+		qs: {access_token:pageFeedToken},
+		method: 'DELETE',
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error posting message to page from removePost fn: ', error)
+		} else if (response.body.error) {
+			console.log('Error from removePost fn: ', response.body.error)
 		}
 	})
 }
@@ -100,7 +115,7 @@ function createEvent(collection, date, sender) {
 	  	collection.save(query, function(err, result) {
 			  if (err) {return console.log(err);}
 			  console.log("saved to database");
-			  postFeed(pageID, date)
+			  addPost(pageID, date)
 			  let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
 			  sendTextMessage(sender, t)
 	  	})
@@ -360,6 +375,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						listRegistered(events, sender, text.substring(6))
 					} else if (text.substring(0,6) === "/help") {
 						showHelp(sender);
+					} else if (text.substring(0,2) === "/r") {
+						removePost(pageID, 283148272070769_315381775514085);
 					} else {
 						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 					}					
