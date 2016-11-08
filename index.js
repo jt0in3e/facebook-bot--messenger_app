@@ -11,11 +11,10 @@ let users = "" //for users collection in database
 // for facebook verification 
 /*it's better to setup environment variable i.e.
 var verificationToken = process.env.VERIFY_TOKEN on you app's server*/
-const verificationToken = process.env.PAGE_ACCESS_TOKEN//process.env.VERIFY_TOKEN;
 // recommended to inject access tokens as environmental variables, e.g.
 // const token = process.env.PAGE_ACCESS_TOKEN
 const token = process.env.PAGE_ACCESS_TOKEN;
-const pageFeedToken = process.env.PAGE_ACCESS_TOKEN//process.env.PAGE_FEED_POST_TOKEN;
+
 //link to mongoDB
 const mongodbLink = process.env.MONGODB_LINK;
 //pageID
@@ -57,7 +56,7 @@ function sendTextMessage(sender, text) {
 function addPost(pageId, text) {
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/feed',
-		qs: {access_token:pageFeedToken},
+		qs: {access_token:token},
 		method: 'POST',
 		json: {
 			message: text,
@@ -76,7 +75,7 @@ function removePost(pageId, postId) {
 	console.log("removePost fn STARTED")
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/' + postId,
-		qs: {access_token:pageFeedToken},
+		qs: {access_token:token},
 		method: 'DELETE',
 	}, function(error, response, body) {
 		if (error) {
@@ -343,7 +342,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	})
 	//verification test on FB
 	app.get('/webhook/', function (req, res) {
-		if (req.query['hub.verify_token'] === verificationToken) {
+		if (req.query['hub.verify_token'] === token) {
 			res.status(200).send(req.query['hub.challenge'])
 		}
 		res.send('Error, wrong token');
