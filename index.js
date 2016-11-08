@@ -11,11 +11,11 @@ let users = "" //for users collection in database
 // for facebook verification 
 /*it's better to setup environment variable i.e.
 var verificationToken = process.env.VERIFY_TOKEN on you app's server*/
-const verificationToken = process.env.VERIFY_TOKEN;
+const verificationToken = process.env.PAGE_ACCESS_TOKEN//process.env.VERIFY_TOKEN;
 // recommended to inject access tokens as environmental variables, e.g.
 // const token = process.env.PAGE_ACCESS_TOKEN
 const token = process.env.PAGE_ACCESS_TOKEN;
-const pageFeedToken = process.env.PAGE_FEED_POST_TOKEN;
+const pageFeedToken = process.env.PAGE_ACCESS_TOKEN//process.env.PAGE_FEED_POST_TOKEN;
 //link to mongoDB
 const mongodbLink = process.env.MONGODB_LINK;
 //pageID
