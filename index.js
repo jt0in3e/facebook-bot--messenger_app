@@ -367,7 +367,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	// to post data back to FB
 	app.post('/webhook/', function (req, res) {
 		console.log("WEBHOOK req.body: \n" + JSON.stringify(req.body));
-                                       let messaging_events = req.body.entry[0].messaging
+                                       let messaging_events = req.body.entry[0].messaging;
+                                       if (!messaging_events.length) {return console.log("Received page updates, not message")}
 		for (let i = 0; i < messaging_events.length; i++) {
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
