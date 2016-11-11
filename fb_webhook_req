@@ -39,6 +39,8 @@
 	"entry":
 		[
 			{
+				"id":"231562315646897",
+				"time":3365544157,
 				"changes":
 				[
 				{"field":"feed",
@@ -54,9 +56,7 @@
 					"open_graph_story_id":null,
 					"message":"yeap man"} //end of 'value'
 				}
-				], //end of 'changes' array
-				"id":"231562315646897",
-				"time":3365544157
+				] //end of 'changes' 
 			}
 		] //end of 'entry'
 }
@@ -68,6 +68,7 @@
 2016-08-19T21:09:44.990800+00:00 app[web.1]: WEBHOOK req.body: 
 2016-08-19T21:09:44.990811+00:00 app[web.1]: 
 {
+	"object":"page",
 	"entry":
 		[
 		{"changes":
@@ -86,6 +87,5 @@
 			],
 		"id":"123654789984132", //it is the same as 'sender_id'
 		"time":1231236589}
-		], //end of 'entry' array
-	"object":"page"
+		] //end of 'entry' array
 }

@@ -375,8 +375,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		console.log("WEBHOOK req.body: \n" + JSON.stringify(req.body));
 		let messaging_events = req.body.entry[0].messaging;
         if (!messaging_events) {return console.log("Received page updates, not message")}
-		for (let i = 0; i < messaging_events.length; i++) {
-			let event = req.body.entry[0].messaging[i]
+			let event = req.body.entry[0].messaging[0]
 			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
 				userData = JSON.parse(userData);
@@ -407,7 +406,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					}					
 				}
 			});
-		};
 		res.sendStatus(200);
 	})
 
