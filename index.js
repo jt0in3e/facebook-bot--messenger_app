@@ -78,11 +78,12 @@ function addPost(pageId, text, callback) {
 function removePost(pageId, postId) {
 	console.log("removePost fn STARTED")
 	request({
-		url: 'https://graph.facebook.com/v2.6/me/' + postId,
+		url: 'https://graph.facebook.com/v2.6/' + postId,
 		qs: {access_token:token},
 		method: 'DELETE',
 	}, function(error, response, body) {
-		if (error) {
+		console.log("URL of post to be removed: " + url)
+                                      if (error) {
 			console.log('Error posting message to page from removePost fn: ', error)
 		} else if (response.body.error) {
 			console.log('Error from removePost fn: ', response.body.error)
@@ -383,7 +384,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					} else if (text.substring(0,6) === "/help") {
 						showHelp(sender);
 					} else if (text.substring(0,2) === "/r") {
-						removePost(pageID, "283148272070769_315381775514085");
+						removePost(pageID, text.substring(3));
 					} else if (text.substring(0,2) === "/p") {
                                                                             addPost(pageID, text.substring(3));
                                                                 } else {
