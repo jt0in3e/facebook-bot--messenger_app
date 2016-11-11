@@ -82,7 +82,7 @@ function removePost(pageId, postId) {
 		qs: {access_token:token},
 		method: 'DELETE',
 	}, function(error, response, body) {
-		console.log("URL of post to be removed: " + url)
+		console.log("URL of post to be removed: \n" + 'https://graph.facebook.com/v2.6/' + postId)
                                       if (error) {
 			console.log('Error posting message to page from removePost fn: ', error)
 		} else if (response.body.error) {
