@@ -51,7 +51,7 @@ function sendTextMessage(sender, text) {
 		}
 	})
 }
-
+//
 //fn to post  text to page
 function addPost(pageId, text) {
 	request({
