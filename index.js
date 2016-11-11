@@ -67,8 +67,8 @@ function addPost(pageId, text) {
 		} else if (response.body.error) {
 			console.log('Error from addPost fn: ', response.body.error)
 		} else {
-			console.log("Response from addPost fn: " + response + "\n");
-			console.log("Body from addPost fn: " + body + "\n")
+			console.log("Response from addPost fn: " + JSON.stringify(response) + "\n");
+			console.log("Body from addPost fn: " + JSON.stringify(body) + "\n")
 		}
 	})
 }
