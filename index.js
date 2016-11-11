@@ -66,6 +66,9 @@ function addPost(pageId, text) {
 			console.log('Error posting message to page from addPost fn: ', error)
 		} else if (response.body.error) {
 			console.log('Error from addPost fn: ', response.body.error)
+		} else {
+			console.log("Response from addPost fn: " + response + "\n");
+			console.log("Body from addPost fn: " + body + "\n")
 		}
 	})
 }
@@ -377,7 +380,9 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						showHelp(sender);
 					} else if (text.substring(0,2) === "/r") {
 						removePost(pageID, "283148272070769_315381775514085");
-					} else {
+					} else if (text.substring(0,2) === "/p") {
+                                                                            addPost(pageID, text.substring(3));
+                                                                } else {
 						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 					}					
 				}
