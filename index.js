@@ -131,8 +131,10 @@ function createEvent(collection, date, sender) {
 
 //fn remove event from DB
 function removeEventFromDB(collection, postId) {
+      console.log("removeEventFromDB STARTED")
       let query = {};
       query[postId] = {$exists: true};
+      console.log("query in removeEventFromDB: \n" + JSON.stringify(query))
       collection.remove(query);
 
 }
