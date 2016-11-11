@@ -47,7 +47,8 @@ function sendTextMessage(sender, text) {
 		if (error) {
 			console.log('Error sending messages: ', error)
 		} else if (response.body.error) {
-			console.log('Error: ', response.body.error)
+		          console.log("if interested in Error uncomment code")	
+                                                //console.log('Error: ', response.body.error)
 		}
 	})
 }
@@ -74,7 +75,7 @@ function addPost(pageId, text, callback) {
 	})
 }
 
-//fn to remove posts
+//fn to remove posts from Page
 function removePost(pageId, postId) {
 	console.log("removePost fn STARTED")
 	request({
@@ -110,10 +111,8 @@ function createEvent(collection, date, sender) {
 	  let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
 	  let queryTest = {};
 	  queryTest[date] = {$exists: true};
-	  console.log("queryTest: "+queryTest[date])
 	  collection.find(queryTest).count(function(err, ex) {
 	  	if (ex) { 
-		  	console.log("COUNT: " + ex);
 		  	sendTextMessage(sender, "Event already exists"); 
 		  	return false;
 	  	}
@@ -128,6 +127,14 @@ function createEvent(collection, date, sender) {
                                       })
 
 	  }); //trying this to find check solution http://stackoverflow.com/questions/8389811/how-to-query-mongodb-to-test-if-an-item-exists
+}
+
+//fn remove event from DB
+function removeEventFromDB(collection, postId) {
+      let query = {};
+      query[postId] = {$exists: true};
+      collection.remove(query);
+
 }
 
 //fn to get current date
@@ -224,17 +231,18 @@ function removeFromEvent(collection, sender, userData) {
 		}
 		
 		collection.findAndModify(query, //query to find 
-									[], //sort order
-									{$set:replacement}, //object to replace
-									{}, //options
-									function(err, object) {//fn to callback
-										if (err) {
-											console.warn(err.message);
-											return false;
-										} else {
-											console.dir(object);
-										}
-									})
+			[], //sort order
+			{$set:replacement}, //object to replace
+			{}, //options
+			function(err, object) {//fn to callback
+				if (err) {
+				        console.warn(err.message);
+				        return false;
+				} else {
+				        console.dir(object);
+				}
+		                   }
+                                      )
 		sendTextMessage(sender, "You have beed removed from the event!");
 	})
 
@@ -317,12 +325,9 @@ function getSenderData(sender, token, callback) {
 function addUserToCollection(collection, userData) {
 	let query = {};
 	let PSID = userData["PSID"];
-	console.log("PSID: " + PSID)
 	query["PSID"] = PSID;
-	console.log("Query on PSID: " + JSON.stringify(query));
 	collection.find(query).toArray(function(err, docs) {
 		if (err) {console.log("Smth wrong writing data to users collection. See error\n" + err); return false;}
-		console.log("DOCS in addUserToCollection: " + docs)
 		if (!docs.length) {
 			collection.insert(userData);
 			console.log("Added user " + userData["PSID"] + " to users")
@@ -361,7 +366,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	app.post('/webhook/', function (req, res) {
 		let messaging_events = req.body.entry[0].messaging
 		for (let i = 0; i < messaging_events.length; i++) {
-			console.log("Messaging_events /i/ : " + i)
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
@@ -385,6 +389,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						showHelp(sender);
 					} else if (text.substring(0,2) === "/r") {
 						removePost(pageID, text.substring(3));
+                                                                                                                   removeEventFromDB(events, text.substring(3));
 					} else if (text.substring(0,2) === "/p") {
                                                                             addPost(pageID, text.substring(3));
                                                                 } else {
