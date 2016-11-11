@@ -53,7 +53,7 @@ function sendTextMessage(sender, text) {
 }
 //
 //fn to post  text to page
-function addPost(pageId, text) {
+function addPost(pageId, text, callback) {
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/feed',
 		qs: {access_token:token},
@@ -67,8 +67,9 @@ function addPost(pageId, text) {
 		} else if (response.body.error) {
 			console.log('Error from addPost fn: ', response.body.error)
 		} else {
-			console.log("Response from addPost fn: " + JSON.stringify(response) + "\n");
-			console.log("Body from addPost fn: " + JSON.stringify(body) + "\n")
+                                    if (typeof callback === "function") {
+                                        callback(body);
+                                    }
 		}
 	})
 }
@@ -115,13 +116,16 @@ function createEvent(collection, date, sender) {
 		  	sendTextMessage(sender, "Event already exists"); 
 		  	return false;
 	  	}
-	  	collection.save(query, function(err, result) {
-			  if (err) {return console.log(err);}
-			  console.log("saved to database");
-			  addPost(pageID, date)
-			  let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
-			  sendTextMessage(sender, t)
-	  	})
+                                      addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
+                                          query["id"] = body.id;
+                                          collection.save(query, function(err, result) {
+                                                  if (err) {return console.log(err);}
+                                                  console.log("saved to database");
+                                                  let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
+                                                  sendTextMessage(sender, t)
+                                          })
+                                      })
+
 	  }); //trying this to find check solution http://stackoverflow.com/questions/8389811/how-to-query-mongodb-to-test-if-an-item-exists
 }
 
