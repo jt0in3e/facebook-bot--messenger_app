@@ -47,8 +47,8 @@ function sendTextMessage(sender, text) {
 		if (error) {
 			console.log('Error sending messages: ', error)
 		} else if (response.body.error) {
-		          console.log("if interested in Error uncomment code")	
-                                                //console.log('Error: ', response.body.error)
+			console.log("if interested in Error uncomment code")	
+			//console.log('Error: ', response.body.error)
 		}
 	})
 }
@@ -68,9 +68,9 @@ function addPost(pageId, text, callback) {
 		} else if (response.body.error) {
 			console.log('Error from addPost fn: ', response.body.error)
 		} else {
-                                    if (typeof callback === "function") {
-                                        callback(body);
-                                    }
+            if (typeof callback === "function") {
+                callback(body);
+            }
 		}
 	})
 }
@@ -84,12 +84,16 @@ function removePost(pageId, postId) {
 		method: 'DELETE',
 	}, function(error, response, body) {
 		console.log("URL of post to be removed: \n" + 'https://graph.facebook.com/v2.6/' + postId)
-                                      if (error) {
-			console.log('Error posting message to page from removePost fn: ', error)
+		if (error) {
+			console.log('Error deleting post from page from removePost fn: ', error)
 		} else if (response.body.error) {
 			console.log('Error from removePost fn: ', response.body.error)
 		}
 	})
+}
+
+function processComment() {
+
 }
 
 //fn to test dates inserted in requests
@@ -100,33 +104,36 @@ function testDates(date) {
 
 //function to create event from messenger, save it to DB and post on page
 function createEvent(collection, date, sender) {
-	  console.log("Date at the beggining: " + date);
-	  if (date === "today" || date === "") {
-	  	date = getCurrentDate();
-	  } else if (!testDates(date)) {
-	  	sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
-	  	return false;
-	  }
-	  console.log("date after " + date)
-	  let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
-	  let queryTest = {};
-	  queryTest[date] = {$exists: true};
-	  collection.find(queryTest).count(function(err, ex) {
+	console.log("Date at the beggining: " + date);
+	if (date === "today" || date === "") {
+		date = getCurrentDate();
+	} else if (!testDates(date)) {
+		sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
+		return false;
+	}
+	console.log("date after " + date)
+	let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
+	let queryTest = {};
+	queryTest[date] = {$exists: true};
+	collection.find(queryTest).count(function(err, ex) {
 	  	if (ex) { 
 		  	sendTextMessage(sender, "Event already exists"); 
 		  	return false;
 	  	}
-                                      addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
-                                          query["id"] = body.id;
-                                          collection.save(query, function(err, result) {
-                                                  if (err) {return console.log(err);}
-                                                  console.log("saved to database");
-                                                  let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
-                                                  sendTextMessage(sender, t)
-                                          })
-                                      })
-
-	  }); //trying this to find check solution http://stackoverflow.com/questions/8389811/how-to-query-mongodb-to-test-if-an-item-exists
+		addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
+        	query["id"] = body.id;
+            collection.save(query, function(err, result) {
+            	if (err) {
+            		console.log(err);
+            		removePost(pageID, body.id);
+            		return false;
+            	}
+                console.log("saved to database");
+                let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
+                sendTextMessage(sender, t)
+			})
+		})
+	}); //trying this to find check solution http://stackoverflow.com/questions/8389811/how-to-query-mongodb-to-test-if-an-item-exists
 }
 
 //fn remove event from DB
@@ -136,7 +143,6 @@ function removeEventFromDB(collection, postId) {
       query["id"] = postId;
       console.log("query in removeEventFromDB: \n" + JSON.stringify(query))
       collection.remove(query);
-
 }
 
 //fn to get current date
@@ -185,20 +191,20 @@ function addToEvent(collection, sender, userData) {
 		}
 		
 		collection.findAndModify(query, //query to find 
-									[], //sort order
-									{$set:replacement}, //object to replace
-									{}, //options
-									function(err, object) {//fn to callback
-										if (err) {
-											console.warn(err.message);
-											return false;
-										} else {
-											console.dir(object);
-										}
-									})
+			[], //sort order
+			{$set:replacement}, //object to replace
+			{}, //options
+			function(err, object) {//fn to callback
+				if (err) {
+					console.warn(err.message);
+					return false;
+				} else {
+					console.dir(object);
+				}
+			}
+		)
 		sendTextMessage(sender, "You have beed added!");
 	})
-
 }
 
 //remove user from event
@@ -251,7 +257,7 @@ function removeFromEvent(collection, sender, userData) {
 }
 
 //function to get info on all registered to the event
-function showRegistered(collection, sender, date) {
+function showCount(collection, sender, date) {
 	let today = getCurrentDate();
 	let query = {};
 	if (date === "today" || date === "") {
@@ -367,8 +373,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	// to post data back to FB
 	app.post('/webhook/', function (req, res) {
 		console.log("WEBHOOK req.body: \n" + JSON.stringify(req.body));
-                                       let messaging_events = req.body.entry[0].messaging;
-                                       if (!messaging_events) {return console.log("Received page updates, not message")}
+		let messaging_events = req.body.entry[0].messaging;
+        if (!messaging_events) {return console.log("Received page updates, not message")}
 		for (let i = 0; i < messaging_events.length; i++) {
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
@@ -382,7 +388,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						//what to do with events
 						createEvent(events, text.substring(7), sender);
 					} else if (text.substring(0,11) === "/registered") {
-						showRegistered(events, sender, text.substring(12));
+						showCount(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
 						addToEvent(events, sender, userData); //register to current/today event
 					} else if (text.substring(0,7) === "/remove" || text[0] === "-") { //this fn is to remove user from event
@@ -393,10 +399,10 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						showHelp(sender);
 					} else if (text.substring(0,2) === "/r") {
 						removePost(pageID, text.substring(3));
-                                                                                                                   removeEventFromDB(events, text.substring(3));
+						removeEventFromDB(events, text.substring(3));
 					} else if (text.substring(0,2) === "/p") {
-                                                                            addPost(pageID, text.substring(3));
-                                                                } else {
+                        addPost(pageID, text.substring(3));
+                    } else {
 						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 					}					
 				}

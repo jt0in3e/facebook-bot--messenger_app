@@ -1,0 +1,91 @@
+//
+/*received from\through messenger*/
+//
+2016-02-11T10:42:01.581263+00:00 app[web.1]: WEBHOOK req.body: 
+2016-02-11T10:42:01.581276+00:00 app[web.1]: 
+{
+	"object":"page",
+	"entry":
+	[
+		{
+		"id":"974148212373769",
+		"time":1234566597425,
+		"messaging":
+			[
+				{
+				"sender": {"id":"865374828143218"},
+				"recipient":{"id":"148972568106305"},
+				"timestamp":2846703892482,
+				"message":
+					{"mid":"mid.8710069582034:517361jg72",
+					"seq":2947,
+					"text":"wtf"
+					}
+				}
+			]
+		}
+	] //end of entry array obj
+}
+
+
+//
+/*received when added comment to status*/
+//
+
+2016-11-02T10:25:32.852991+00:00 app[web.1]: WEBHOOK req.body: 
+2016-11-02T10:25:32.853003+00:00 app[web.1]: 
+{
+	"object":"page", 
+	"entry":
+		[
+			{
+				"changes":
+				[
+				{"field":"feed",
+				"value":
+					{"post_id":"784613213245764_982103746580462",
+					"parent_id":"224345678910237_987456123085214",
+					"sender_name":"Fbarksa",
+					"comment_id":"258741036998741_369874521014789",
+					"sender_id":654789632014688,
+					"item":"comment",
+					"verb":"add",
+					"created_time":1111223364,
+					"open_graph_story_id":null,
+					"message":"yeap man"} //end of 'value'
+				}
+				], //end of 'changes' array
+				"id":"231562315646897",
+				"time":3365544157
+			}
+		] //end of 'entry'
+}
+
+
+//
+/*received when added new status*/
+//
+2016-08-19T21:09:44.990800+00:00 app[web.1]: WEBHOOK req.body: 
+2016-08-19T21:09:44.990811+00:00 app[web.1]: 
+{
+	"entry":
+		[
+		{"changes":
+			[
+			{"field":"feed",
+			"value":
+				{"post_id":"123654789984132_333665587894310", //first part of this id consist of the 'sender_id'
+				"sender_name":"Fbarksa",
+				"sender_id":123654789984132,
+				"item":"status",
+				"verb":"add",
+				"published":1,
+				"created_time":1231236544,
+				"message":"test12345"}
+			}
+			],
+		"id":"123654789984132", //it is the same as 'sender_id'
+		"time":1231236589}
+		], //end of 'entry' array
+	"object":"page"
+}
