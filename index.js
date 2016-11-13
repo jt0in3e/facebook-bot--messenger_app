@@ -333,6 +333,7 @@ function getSenderData(sender, token, callback) {
 function addUserToCollection(collection, userData) {
 	let query = {};
 	let senderID = userData["senderID"];
+	console.log("SENDERID in comments: " + senderID)
 	let last_name = userData["last_name"];
 	query["last_name"] = last_name;
 	collection.find(query).toArray(function(err, docs) {
