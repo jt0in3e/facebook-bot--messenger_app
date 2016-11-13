@@ -374,10 +374,14 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	app.post('/webhook/', function (req, res) {
 		console.log("WEBHOOK req.body: \n" + JSON.stringify(req.body));
 		let messaging_events = req.body.entry[0].messaging;
-        if (!messaging_events) {return console.log("Received page updates, not message")}
-			let event = req.body.entry[0].messaging[0]
-			let sender = event.sender.id;
-			getSenderData(sender, token, function(userData) {
+        if (!messaging_events) {
+        	console.log("Received page updates, not message");
+
+        	return false;
+        }
+		let event = req.body.entry[0].messaging[0]
+		let sender = event.sender.id;
+		getSenderData(sender, token, function(userData) {
 				userData = JSON.parse(userData);
 				userData["PSID"] = sender;
 				addUserToCollection(users, userData);
@@ -405,7 +409,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 					}					
 				}
-			});
+		});
 		res.sendStatus(200);
 	})
 
