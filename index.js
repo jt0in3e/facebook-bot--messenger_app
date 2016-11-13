@@ -334,6 +334,7 @@ function addUserToCollection(collection, userData) {
 	let query = {};
 	let senderID = userData["senderID"];
 	console.log("SENDERID in comments: " + senderID)
+	let id = userData["id"];
 	let last_name = userData["last_name"];
 	query["last_name"] = last_name;
 	collection.find(query).toArray(function(err, docs) {
@@ -344,6 +345,9 @@ function addUserToCollection(collection, userData) {
 		} else if (!docs[0].senderID && senderID) {
 			collection.update(query, {$set: {"senderID": senderID}});
 			console.log("Updated senderID");
+		} else if (!docs[0].id && id) {
+			collection.update(query, {$set: {"id": id}})
+			console.log("UPDATED USER ID")
 		} else {
 			console.log("User " + userData["last_name"] + " already in collection");
 		}
@@ -394,6 +398,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				console.log("USER DATA from messenger\n" + userData)
 				userData = JSON.parse(userData);
 				userData["senderID"] = sender;
+				userData["id"] = false;
 				addUserToCollection(users, userData);
 				if (event.message && event.message.text) {
 					let text = event.message.text
