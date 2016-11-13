@@ -357,10 +357,12 @@ function addUserToCollection(collection, userData) {
 function getUserData(collection, lastName) {
 	let query = {};
 	query["last_name"] = lastName;
+	let uD = "";
 	collection.find(query).toArray(function(err, result) {
 		if (err) {return console.log("error in getUserData: \n" + err)}
-		return result[0];
-	})
+		uD = result[0];
+	});
+	return uD;
 }
 
 //fn to show help w/ all commands
