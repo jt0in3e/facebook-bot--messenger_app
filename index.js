@@ -377,7 +377,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         if (!messaging_events) {return console.log("Received page updates, not message")}
 		for (let i = 0; i < messaging_events.length; i++) {
 			let event = req.body.entry[0].messaging[i]
-			let sender = event.recipient.id;
+			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
 				userData = JSON.parse(userData);
 				userData["PSID"] = sender;
