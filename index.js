@@ -397,8 +397,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			getSenderData(sender, token, function(userData) {
 				console.log("USER DATA from messenger\n" + userData)
 				userData = JSON.parse(userData);
-				userData["senderID"] = sender;
 				userData["id"] = false;
+				userData["senderID"] = sender;
 				addUserToCollection(users, userData);
 				if (event.message && event.message.text) {
 					let text = event.message.text
