@@ -316,7 +316,7 @@ function getSenderData(sender, token, callback) {
 	request({
 		url: 'https://graph.facebook.com/v2.6/' + sender,
 		qs: {access_token:token,
-			fields: "first_name, last_name, id"},
+			fields: "metadata=1"},
 		method: 'GET'
 	}, function(error, response, body) {
 		if (error) {
