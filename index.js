@@ -332,13 +332,8 @@ function getSenderData(sender, token, callback) {
 //fn to add user to users collection for further communication
 function addUserToCollection(collection, userData) {
 	let query = {};
-	let userID = userData["userID"];
 	let senderID = userData["senderID"];
-	if (userID) {
-		query["userID"] = userID;
-	} else {
-		query["senderID"] = senderID;
-	}
+	query["senderID"] = senderID;
 	collection.find(query).toArray(function(err, docs) {
 		if (err) {console.log("Smth wrong writing data to users collection. See error\n" + err); return false;}
 		if (!docs.length) {
@@ -386,7 +381,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			getSenderData(sender, token, function(userData) {
 				userData = JSON.parse(userData);
 				userData["senderID"] = sender;
-				userData["userID"] = req.body.entry[0]["id"];
 				addUserToCollection(users, userData);
 				if (event.message && event.message.text) {
 					let text = event.message.text
