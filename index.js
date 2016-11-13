@@ -376,8 +376,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		let messaging_events = req.body.entry[0].messaging;
         if (!messaging_events) {
         	getSenderData(req.body.entry[0]["changes"][0]["value"]["sender_id"], token, function(bod) {
-        		console.log("user data from coment \n"+bod+
-        			"\n" + unescape(bod["last_name"]))
+        		console.log("user data from coment \n"+bod)
+        		console.log("\nlast_name: " + unescape(bod["last_name"]))
         	})
         	return console.log("Received page updates, not message")
         }
