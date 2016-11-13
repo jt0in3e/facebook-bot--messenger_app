@@ -406,7 +406,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			getSenderData(sender, token, function(userData) {
 				console.log("USER DATA from messenger\n" + userData)
 				getUserData(users, userData["last_name"], function(data) {
-					console.log("USERdata from DB users: \n" + data);
+					console.log("USERdata from DB users: \n" + JSON.stringify(data));
 				});
 				userData = JSON.parse(userData);
 				userData["id"] = false;
