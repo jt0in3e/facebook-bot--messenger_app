@@ -333,12 +333,16 @@ function getSenderData(sender, token, callback) {
 function addUserToCollection(collection, userData) {
 	let query = {};
 	let senderID = userData["senderID"];
-	query["senderID"] = senderID;
+	let last_name = userData["last_name"];
+	query["last_name"] = last_name;
 	collection.find(query).toArray(function(err, docs) {
 		if (err) {console.log("Smth wrong writing data to users collection. See error\n" + err); return false;}
 		if (!docs.length) {
 			collection.insert(userData);
 			console.log("Added user \n" + JSON.stringify(userData) + "\n to users")
+		} else if (!docs[0].senderID && senderID) {
+			collection.update(query, {$set: {"senderID": senderID}});
+			console.log("Updated senderID");
 		} else {
 			console.log("User " + userData["last_name"] + " already in collection");
 		}
@@ -375,9 +379,10 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		console.log("WEBHOOK req.body: \n" + JSON.stringify(req.body));
 		let messaging_events = req.body.entry[0].messaging;
         if (!messaging_events) {
-        	getSenderData(req.body.entry[0]["changes"][0]["value"]["sender_id"], token, function(bod) {
-        		console.log("user data from coment \n"+bod)
-        		console.log("\nlast_name: " + unescape(bod["last_name"]))
+        	getSenderData(req.body.entry[0]["changes"][0]["value"]["sender_id"], token, function(userData) {
+        		userData = JSON.parse(userData);
+        		userData["senderID"] = false;
+        		addUserToCollection(users, userData);
         	})
         	return console.log("Received page updates, not message")
         }
