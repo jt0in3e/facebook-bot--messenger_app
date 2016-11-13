@@ -316,7 +316,7 @@ function getSenderData(sender, token, callback) {
 	request({
 		url: 'https://graph.facebook.com/v2.6/' + sender,
 		qs: {access_token:token,
-			fields: "metadata=1"},
+			fields: "first_name, last_name"},
 		method: 'GET'
 	}, function(error, response, body) {
 		if (error) {
@@ -376,7 +376,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		let messaging_events = req.body.entry[0].messaging;
         if (!messaging_events) {
         	getSenderData(req.body.entry[0]["changes"][0]["value"]["sender_id"], token, function(bod) {
-        		console.log("user data from coment \n"+bod)
+        		console.log("user data from coment \n"+bod+
+        			"\n" + unescape(bod["last_name"]))
         	})
         	return console.log("Received page updates, not message")
         }
