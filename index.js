@@ -375,9 +375,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		console.log("WEBHOOK req.body: \n" + JSON.stringify(req.body));
 		let messaging_events = req.body.entry[0].messaging;
         if (!messaging_events) {
-        	getSenderData(req.body.entry[0]["changes"][0]["value"]["user_id"], token, function(bod) {
-        		console.log("GET USER DATA FROM COMMENT: \n" + bod)
-        	})
+        	console.log(req.body.entry[0]["changes"][0])
         	return console.log("Received page updates, not message")
         }
 		for (let i = 0; i < messaging_events.length; i++) {
