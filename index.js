@@ -412,7 +412,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						createEvent(pageID, events, text.substring(7), sender, function(query, date) {
 								addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
         							query["id"] = body.id;
-            						collection.save(query, function(err, result) {
+            						events.save(query, function(err, result) {
 						            	if (err) {
 						            		console.log(err);
 						            		removePost(pageID, body.id);
