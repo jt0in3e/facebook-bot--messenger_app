@@ -354,14 +354,15 @@ function addUserToCollection(collection, userData) {
 }
 
 //fn to get userData from DB
-function getUserData(collection, lastName, callback) {
+function getUserFromDb(collection, lastName) {
 	let query = {};
 	query["last_name"] = lastName;
 	let uD = "";
 	collection.find(query).toArray(function(err, result) {
 		if (err) {return console.log("error in getUserData: \n" + err)}
-		callback(result);
+		uD = result[0];
 	});
+	return uD;
 }
 
 //fn to show help w/ all commands
@@ -405,9 +406,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
 				userData = JSON.parse(userData);
-				getUserData(users, userData["last_name"], function(data) {
-					console.log("USERdata from DB users: \n" + JSON.stringify(data));
-				});
+				let uD = getUserFromDb(users, userData["last_name"]);
+				console.log("USer data from DB: \n" + JSON.stringify(uD))
 
 				userData["id"] = false;
 				userData["senderID"] = sender;
