@@ -360,7 +360,7 @@ function getUserData(collection, lastName, callback) {
 	let uD = "";
 	collection.find(query).toArray(function(err, result) {
 		if (err) {return console.log("error in getUserData: \n" + err)}
-		callback(result[0]);
+		callback(result);
 	});
 }
 
