@@ -103,7 +103,7 @@ function testDates(date) {
 }
 
 //function to create event from messenger, save it to DB and post on page
-function createEvent(collection, date, sender) {
+function createEvent(pageID, collection, date, sender, callback) {
 	console.log("Date at the beggining: " + date);
 	if (date === "today" || date === "") {
 		date = getCurrentDate();
@@ -120,6 +120,8 @@ function createEvent(collection, date, sender) {
 		  	sendTextMessage(sender, "Event already exists"); 
 		  	return false;
 	  	}
+		callback(query);
+		/*
 		addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
         	query["id"] = body.id;
             collection.save(query, function(err, result) {
@@ -133,6 +135,7 @@ function createEvent(collection, date, sender) {
                 sendTextMessage(sender, t)
 			})
 		})
+		*/
 	}); //trying this to find check solution http://stackoverflow.com/questions/8389811/how-to-query-mongodb-to-test-if-an-item-exists
 }
 
@@ -406,8 +409,22 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					let text = event.message.text
 					if (text.substring(0,6) === "/event") {
 						//what to do with events
-						createEvent(events, text.substring(7), sender);
-						addToEvent(events, sender, userData);
+						createEvent(pageID, events, text.substring(7), sender, function(query) {
+								addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
+        							query["id"] = body.id;
+            						collection.save(query, function(err, result) {
+						            	if (err) {
+						            		console.log(err);
+						            		removePost(pageID, body.id);
+						            		return false;
+						            	}
+						                console.log("saved to database");
+						                addToEvent(events, sender, userData)
+						                let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
+						                sendTextMessage(sender, t)
+									})
+								})
+						});
 					} else if (text.substring(0,11) === "/registered") {
 						showCount(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
@@ -438,59 +455,3 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	})
 /*end of MongoClient.connect*/
 })
-
-
-/*
----------------------------------------------------------
-//for future release
-//fn for geting postcards
-function sendGenericMessage(sender) {
-	let messageData = {
-		"attachment": {
-			"type": "template",
-			"payload": {
-				"template_type": "generic",
-				"elements": [{
-					"title": "First card",
-					"subtitle": "Element #1 of an hscroll",
-					"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
-					"buttons": [{
-						"type": "web_url",
-						"url": "https://www.messenger.com",
-						"title": "web url"
-					}, {
-						"type": "postback",
-						"title": "Postback",
-						"payload": "Payload for first element in a generic bubble",
-					}],
-				}, {
-					"title": "Second card",
-					"subtitle": "Element #2 of an hscroll",
-					"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
-					"buttons": [{
-						"type": "postback",
-						"title": "Postback",
-						"payload": "Payload for second element in a generic bubble",
-					}],
-				}]
-			}
-		}
-	}
-	request({
-		url: 'https://graph.facebook.com/v2.6/me/messages',
-		qs: {access_token:token},
-		method: 'POST',
-		json: {
-			recipient: {id:sender},
-			message: messageData,
-		}
-	}, function(error, response, body) {
-		if (error) {
-			console.log('Error sending messages: ', error)
-		} else if (response.body.error) {
-			console.log('Error from generic: ', response.body.error)
-		}
-	})
-}
-
-*/
