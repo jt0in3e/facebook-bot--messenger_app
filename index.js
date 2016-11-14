@@ -404,11 +404,11 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			let event = req.body.entry[0].messaging[i]
 			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
-				console.log("USER last_name from messenger\n" + userData["last_name"])
+				userData = JSON.parse(userData);
 				getUserData(users, userData["last_name"], function(data) {
 					console.log("USERdata from DB users: \n" + JSON.stringify(data));
 				});
-				userData = JSON.parse(userData);
+
 				userData["id"] = false;
 				userData["senderID"] = sender;
 				addUserToCollection(users, userData);
