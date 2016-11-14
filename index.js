@@ -398,7 +398,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         		userData["senderID"] = false;
         		addUserToCollection(users, userData);
         		getUserFromDb(users, userData["last_name"], function(data) {
-        			if (data["senderID"]) {sendTextMessage(data["senderID"]. 'Hello swietee')}
+        			if (data["senderID"]) {sendTextMessage(data["senderID"], 'Hello swietee')}
         		})
         	})
         	return console.log("Received page updates, not message")
