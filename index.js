@@ -354,15 +354,14 @@ function addUserToCollection(collection, userData) {
 }
 
 //fn to get userData from DB
-function getUserFromDb(collection, lastName) {
+function getUserFromDb(collection, lastName, callback) { //mongodb works async so to get all data callback is needed!
 	let query = {};
 	query["last_name"] = lastName;
 	let uD = "";
 	collection.find(query).toArray(function(err, result) {
 		if (err) {return console.log("error in getUserData: \n" + err)}
-		uD = result[0];
+		callback(result);
 	});
-	return uD;
 }
 
 //fn to show help w/ all commands
@@ -398,6 +397,9 @@ MongoClient.connect(mongodbLink, function(err, database) {
         		userData = JSON.parse(userData);
         		userData["senderID"] = false;
         		addUserToCollection(users, userData);
+        		getUserFromDb(users, userData["last_name"], function(data) {
+        			if (data["senderID"]) {sendTextMessage(data["senderID"]. 'Hello swietee')}
+        		})
         	})
         	return console.log("Received page updates, not message")
         }
@@ -406,8 +408,9 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
 				userData = JSON.parse(userData);
-				let uD = getUserFromDb(users, userData["last_name"]);
-				console.log("USer data from DB: \n" + JSON.stringify(uD))
+				getUserFromDb(users, userData["last_name"], function(data) {
+					console.log("USERdata from DB users: \n" + JSON.stringify(data));
+				});
 
 				userData["id"] = false;
 				userData["senderID"] = sender;
