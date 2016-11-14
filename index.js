@@ -374,7 +374,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	if (err) {return console.log("This is DB Error \n" + err);}
 	db = database;
 	events = db.collection("events");
-	users = db.collection("users");
 	// index
 	app.get('/', function (req, res) {
 		res.status(200).send('hello I\'m very sexy bot')
@@ -395,11 +394,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
         if (!messaging_events) {
         	getSenderData(req.body.entry[0]["changes"][0]["value"]["sender_id"], token, function(userData) {
         		userData = JSON.parse(userData);
-        		userData["senderID"] = false;
-        		addUserToCollection(users, userData);
-        		getUserFromDb(users, userData["last_name"], function(data) {
-        			if (data["senderID"]) {sendTextMessage(data["senderID"], 'Hello swietee')}
-        		})
         	})
         	return console.log("Received page updates, not message")
         }
@@ -408,18 +402,12 @@ MongoClient.connect(mongodbLink, function(err, database) {
 			let sender = event.sender.id;
 			getSenderData(sender, token, function(userData) {
 				userData = JSON.parse(userData);
-				getUserFromDb(users, userData["last_name"], function(data) {
-					console.log("USERdata from DB users: \n" + JSON.stringify(data));
-				});
-
-				userData["id"] = false;
-				userData["senderID"] = sender;
-				addUserToCollection(users, userData);
 				if (event.message && event.message.text) {
 					let text = event.message.text
 					if (text.substring(0,6) === "/event") {
 						//what to do with events
 						createEvent(events, text.substring(7), sender);
+						addToEvent(events, sender, userData);
 					} else if (text.substring(0,11) === "/registered") {
 						showCount(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
