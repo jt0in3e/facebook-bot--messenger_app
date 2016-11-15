@@ -408,10 +408,10 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				if (event.message && event.message.text) {
 					let text = event.message.text
 					if (text.substring(0,6) === "/event") {
-                        sendTextMessage(sender, JSON.stringify(userData));
                         //what to do with events
-						/*createEvent(pageID, events, text.substring(7), sender, function(query, date) {
-								addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
+						createEvent(pageID, events, text.substring(7), sender, function(query) {
+                                sendTextMessage(sender, "Event will be created and added to db")
+                                /*addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
         							query["id"] = body.id;
             						events.save(query, function(err, result) {
 						            	if (err) {
@@ -424,8 +424,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						                let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
 						                sendTextMessage(sender, t)
 									})
-								})
-						});*/
+								})*/
+						});
 					} else if (text.substring(0,11) === "/registered") {
 						showCount(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
