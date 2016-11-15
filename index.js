@@ -120,7 +120,7 @@ function createEvent(pageID, collection, date, sender, callback) {
 		  	sendTextMessage(sender, "Event already exists"); 
 		  	return false;
 	  	}
-		callback(query);
+		callback(query, date);
 		/*
 		addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
         	query["id"] = body.id;
@@ -409,7 +409,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					let text = event.message.text
 					if (text.substring(0,6) === "/event") {
                         //what to do with events
-						createEvent(pageID, events, text.substring(7), sender, function(query) {
+						createEvent(pageID, events, text.substring(7), sender, function(query, date) {
                                 sendTextMessage(sender, "Access to var 'date' " + date)
                                 /*addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
         							query["id"] = body.id;
