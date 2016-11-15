@@ -410,7 +410,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					if (text.substring(0,6) === "/event") {
                         //what to do with events
 						createEvent(pageID, events, text.substring(7), sender, function(query) {
-                                sendTextMessage(sender, "Event will be created and added to db")
+                                sendTextMessage(sender, "Access to var 'date' " + date)
                                 /*addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
         							query["id"] = body.id;
             						events.save(query, function(err, result) {
