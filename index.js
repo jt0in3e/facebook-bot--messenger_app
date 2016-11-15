@@ -408,7 +408,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				if (event.message && event.message.text) {
 					let text = event.message.text
 					if (text.substring(0,6) === "/event") {
-                        sendTextMessage(sender, JSON.stringify(userData);
+                        sendTextMessage(sender, JSON.stringify(userData));
                         //what to do with events
 						/*createEvent(pageID, events, text.substring(7), sender, function(query, date) {
 								addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
