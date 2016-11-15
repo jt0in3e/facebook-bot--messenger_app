@@ -120,7 +120,7 @@ function createEvent(pageID, collection, date, sender, callback) {
 		  	sendTextMessage(sender, "Event already exists"); 
 		  	return false;
 	  	}
-		callback(query, date);
+		callback(query);
 		/*
 		addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
         	query["id"] = body.id;
@@ -408,8 +408,9 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				if (event.message && event.message.text) {
 					let text = event.message.text
 					if (text.substring(0,6) === "/event") {
-						//what to do with events
-						createEvent(pageID, events, text.substring(7), sender, function(query, date) {
+                        sendTextMessage(sender, JSON.stringify(userData);
+                        //what to do with events
+						/*createEvent(pageID, events, text.substring(7), sender, function(query, date) {
 								addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
         							query["id"] = body.id;
             						events.save(query, function(err, result) {
@@ -424,7 +425,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						                sendTextMessage(sender, t)
 									})
 								})
-						});
+						});*/
 					} else if (text.substring(0,11) === "/registered") {
 						showCount(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
@@ -442,7 +443,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
                         addPost(pageID, text.substring(3));
                     } else {
 						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
-					}					
+					}
 				}
 			});
 		};
