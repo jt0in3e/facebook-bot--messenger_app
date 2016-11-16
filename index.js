@@ -127,7 +127,7 @@ function createEvent(pageID, collection, date, sender, callback) {
 function checkEvent(collection, date) {
 	let queryTest = {};
 	queryTest[date] = {$exists: true};
-	return collection.find(queryTest).limit(1);
+	return collection.find(queryTest).limit(1).count();
 }
 
 //fn remove event from DB
