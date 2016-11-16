@@ -395,8 +395,12 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		//console.log("WEBHOOK req.body: \n" + JSON.stringify(req.body));
 		let messaging_events = req.body.entry[0].messaging;
         if (!messaging_events) {
-        	getSenderData(req.body.entry[0]["changes"][0]["value"]["sender_id"], token, function(userData) {
+        	let value = req.body.entry[0]["changes"][0]["value"];
+        	let senderInPost = value["sender_id"];
+        	getSenderData(senderInPost, token, function(userData) {
+        		console.log("From post chanages: " + userData)
         		userData = JSON.parse(userData);
+
         	})
         	return console.log("Received page updates, not message")
         }
@@ -419,9 +423,9 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						            		return false;
 						            	}
 						                console.log("saved to database");
-						                addToEvent(events, sender, userData)
 						                let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
-						                sendTextMessage(sender, t)
+						                sendTextMessage(sender, t);
+						                addToEvent(events, sender, userData)
 									})
 								})
 						});
