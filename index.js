@@ -415,9 +415,11 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						let message = value["message"];
 						let count = docs[0][today]["registered"];
 						let persons = docs[0][today]["personsRegistered"];
-						let replacement = {};
+						let replacement = {today: {"registered": 0, "personsRegistered": []}};
 						if (!persons.length) {
-							events.update(query, {$set: {"registered": 1, "personsRegistered": [userData]}})
+							replacement[today]["registered"] = 1;
+							replacement[today]["personsRegistered"] = [userData];
+							events.update(query, {$set: replacement)
 						} else {
 							console.log("ELSE in persons comparison began")
 							for (let j=0; j<persons.length; j++) {
