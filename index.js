@@ -130,9 +130,10 @@ function checkEvent(collection, date) {
 	collection.find(queryTest).limit(1).count(function(err, ex) {
 		if (ex) {
 			return true;
+		} else {
+			return false;
 		}
 	});
-	return false;
 }
 
 //fn remove event from DB
