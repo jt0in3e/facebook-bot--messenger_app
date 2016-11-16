@@ -410,16 +410,17 @@ MongoClient.connect(mongodbLink, function(err, database) {
         			events.find(query).toArray(function(err, docs) {
 				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false}
 		        		let statusId = value["parent_id"];
+		        		console.log("Today: " + today)
 		        		if (statusId !== docs[0]["id"]) {return console.log("not this time. Event is in past")}
 		        		let item = value["item"];
 						let message = value["message"];
 						let count = docs[0][today]["registered"];
 						let persons = docs[0][today]["personsRegistered"];
-						let replacement = {today: {"registered": 0, "personsRegistered": []}};
+						//let replacement = {today: {"registered": 0, "personsRegistered": []}};
 						if (!persons.length) {
-							replacement[today]["registered"] = 1;
-							replacement[today]["personsRegistered"] = [userData];
-							events.update(query, {$set: replacement})
+							//replacement[today]["registered"] = 1;
+							//replacement[today]["personsRegistered"] = [userData];
+							//events.update(query, {$set: replacement})
 						} else {
 							console.log("ELSE in persons comparison began")
 							for (let j=0; j<persons.length; j++) {
