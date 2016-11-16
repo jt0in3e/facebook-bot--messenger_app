@@ -117,7 +117,7 @@ function createEvent(pageID, collection, date, sender, callback) {
 	queryTest[date] = {$exists: true};
 	collection.find(queryTest).count(function(err, ex) {
 	  	if (ex) { 
-		  	sendTextMessage(sender, "Event already exists"); 
+		  	sendTextMessage(sender, "Event already exists.\nCount is: " + ex); 
 		  	return false;
 	  	}
 		callback(query, date);
@@ -401,7 +401,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
         	console.log("senderInPost: \n" + senderInPost);
         	getSenderData(senderInPost, token, function(userData) {
-        		console.log("From post chanages: " + userData)
         		userData = JSON.parse(userData);
         		if (!userData["error"]) {
 		        	let today = getCurrentDate();
