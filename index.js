@@ -115,28 +115,24 @@ function createEvent(pageID, collection, date, sender, callback) {
 	let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
 	let queryTest = {};
 	queryTest[date] = {$exists: true};
-	collection.find(queryTest).count(function(err, ex) {
+	collection.find(queryTest).limit(1).count(function(err, ex) {
 	  	if (ex) { 
 		  	sendTextMessage(sender, "Event already exists.\nCount is: " + ex); 
 		  	return false;
 	  	}
 		callback(query, date);
-		/*
-		addPost(pageID, date, function(body) { //firs published event, saved to db and added published id
-        	query["id"] = body.id;
-            collection.save(query, function(err, result) {
-            	if (err) {
-            		console.log(err);
-            		removePost(pageID, body.id);
-            		return false;
-            	}
-                console.log("saved to database");
-                let t = "Event " + Object.keys(query)[0] + " created, posted and saved to database"
-                sendTextMessage(sender, t)
-			})
-		})
-		*/
 	}); //trying this to find check solution http://stackoverflow.com/questions/8389811/how-to-query-mongodb-to-test-if-an-item-exists
+}
+
+function checkEvent(collection, date) {
+	let queryTest = {};
+	queryTest[date] = {$exists: true};
+	collection.find(queryTest).limit(1).count(function(err, ex) {
+		if (ex) {
+			return true;
+		}
+	});
+	return false;
 }
 
 //fn remove event from DB
