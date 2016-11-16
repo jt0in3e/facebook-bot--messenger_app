@@ -398,10 +398,22 @@ MongoClient.connect(mongodbLink, function(err, database) {
         	let value = req.body.entry[0]["changes"][0]["value"];
         	console.log("value in page changes: \n" + JSON.stringify(value))
         	let senderInPost = value["sender_id"];
+
         	console.log("senderInPost: \n" + senderInPost);
         	getSenderData(senderInPost, token, function(userData) {
         		console.log("From post chanages: " + userData)
         		userData = JSON.parse(userData);
+        		if (!userData["error"]) {
+					let message = value["message"];
+		        	let statusId = value["parent_id"];
+		        	let item = value["item"];
+		        	let today = getCurrentDate();
+        			let query = {};
+        			query[today] = {$exists: true};
+        			console.log("Item in changes: " + item)
+        		} else {
+        			console.log("requested page:\n"+JSON.stringify(userData))
+        		}
 
         	})
         	return console.log("Received page updates, not message")
