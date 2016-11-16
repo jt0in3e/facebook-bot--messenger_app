@@ -416,7 +416,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						let message = value["message"];
 						let count = docs[0][today]["registered"];
 						let persons = docs[0][today]["personsRegistered"];
-						//let replacement = {today: {"registered": 0, "personsRegistered": []}};
+						let replacement = {today: {"registered": 0, "personsRegistered": []}};
+						console.log("In replacement: [today]" + replacement[today])
 						if (!persons.length) {
 							//replacement[today]["registered"] = 1;
 							//replacement[today]["personsRegistered"] = [userData];
