@@ -414,10 +414,11 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		        		console.log("typeof docs[id]: " + typeof docs["id"])
 		        		console.log("statusId: " + statusId)
 		        		console.log("docs[id]: " + docs[0][today]["id"])
-		        		if (statusId != docs[0][today]["id"]) {return console.log("not this post/status")}
+		        		//if (statusId != docs[0][today]["id"]) {return console.log("not this post/status")}
 		        		let item = value["item"];
 						let message = value["message"];
 						let count = docs[0][today]["registered"];
+						console.log("COUNT: " + count)
 						let persons = docs[0][today]["personsRegistered"];
 						let replacement = {};
 						if (!persons.length) {
