@@ -410,6 +410,43 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		        	let today = getCurrentDate();
         			let query = {};
         			query[today] = {$exists: true};
+        			events.find(query).toArray(function(err, docs) {
+				        if (err) {return console.log("Smth strange happen.\nPlease try again")}
+						let count = docs[0][today]["registered"];
+						let persons = docs[0][today]["personsRegistered"];
+						let replacement = {};
+						if (!persons.length) {
+							replacement[today] = {"registered": 1,
+												  "personsRegistered":[userData]}
+						} else {
+							console.log("ELSE in persons comparison began")
+							for (let j=0; j<persons.length; j++) {
+								console.log("Persons last_name: " + persons[j]["last_name"])
+								if (userData["last_name"] === persons[j]["last_name"]) {
+									console.log("You are already registered");
+									return false;
+								}
+							}
+							count += 1;
+							persons.push(userData);
+							replacement[today] = {"registered":count, "personsRegistered":persons};
+						}
+						
+						collection.findAndModify(query, //query to find 
+							[], //sort order
+							{$set:replacement}, //object to replace
+							{}, //options
+							function(err, object) {//fn to callback
+								if (err) {
+									console.warn(err.message);
+									return false;
+								} else {
+									console.dir(object);
+								}
+							}
+						)
+						console.log("You have beed added!");
+        			})
         			console.log("Item in changes: " + item)
         		} else {
         			console.log("requested page:\n"+JSON.stringify(userData))
