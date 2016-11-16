@@ -410,20 +410,14 @@ MongoClient.connect(mongodbLink, function(err, database) {
         			events.find(query).toArray(function(err, docs) {
 				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false}
 		        		let statusId = value["parent_id"];
-		        		console.log("typeof statusId: " + typeof statusId)
-		        		console.log("typeof docs[id]: " + typeof docs[0]["id"])
-		        		console.log("statusId: " + statusId)
-		        		console.log("docs[id]: " + docs[0]["id"])
-		        		if (statusId === docs[0]["id"]) {return console.log("VSO, hvatyt, hvatyt")}
+		        		if (statusId !== docs[0]["id"]) {return console.log("not this time. Event is in past")}
 		        		let item = value["item"];
 						let message = value["message"];
 						let count = docs[0][today]["registered"];
-						console.log("COUNT: " + count)
 						let persons = docs[0][today]["personsRegistered"];
 						let replacement = {};
 						if (!persons.length) {
-							replacement[today] = {"registered": 1,
-												  "personsRegistered":[userData]}
+							events.update(query, {$set: {"registered": 1, "personsRegistered": [userData]}})
 						} else {
 							console.log("ELSE in persons comparison began")
 							for (let j=0; j<persons.length; j++) {
@@ -435,22 +429,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 							}
 							count += 1;
 							persons.push(userData);
-							replacement[today] = {"registered":count, "personsRegistered":persons};
+							events.update(query, {$set: {"registered": count, "personsRegistered": persons}})
 						}
-						
-						events.findAndModify(query, //query to find 
-							[], //sort order
-							{$set:replacement}, //object to replace
-							{}, //options
-							function(err, object) {//fn to callback
-								if (err) {
-									console.warn(err.message);
-									return false;
-								} else {
-									console.dir(object);
-								}
-							}
-						)
 						console.log("You have beed added!");
         			})
         		} else {
