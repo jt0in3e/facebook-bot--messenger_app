@@ -404,14 +404,15 @@ MongoClient.connect(mongodbLink, function(err, database) {
         		console.log("From post chanages: " + userData)
         		userData = JSON.parse(userData);
         		if (!userData["error"]) {
-					let message = value["message"];
-		        	let statusId = value["parent_id"];
-		        	let item = value["item"];
 		        	let today = getCurrentDate();
         			let query = {};
         			query[today] = {$exists: true};
         			events.find(query).toArray(function(err, docs) {
 				        if (err) {return console.log("Smth strange happen.\nPlease try again")}
+		        		let statusId = value["parent_id"];
+		        		if (statusId != docs["id"]) {return console.log("not this post/status")}
+		        		let item = value["item"];
+						let message = value["message"];
 						let count = docs[0][today]["registered"];
 						let persons = docs[0][today]["personsRegistered"];
 						let replacement = {};
