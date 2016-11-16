@@ -408,7 +408,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         			let query = {};
         			query[today] = {$exists: true};
         			events.find(query).toArray(function(err, docs) {
-				        if (err) {return console.log("Smth strange happen.\nPlease try again")}
+				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false}
 		        		let statusId = value["parent_id"];
 		        		if (statusId != docs["id"]) {return console.log("not this post/status")}
 		        		let item = value["item"];
@@ -448,7 +448,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						)
 						console.log("You have beed added!");
         			})
-        			console.log("Item in changes: " + item)
         		} else {
         			console.log("requested page:\n"+JSON.stringify(userData))
         		}
