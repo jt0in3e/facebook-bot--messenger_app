@@ -432,7 +432,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 							replacement[today] = {"registered":count, "personsRegistered":persons};
 						}
 						
-						collection.findAndModify(query, //query to find 
+						events.findAndModify(query, //query to find 
 							[], //sort order
 							{$set:replacement}, //object to replace
 							{}, //options
