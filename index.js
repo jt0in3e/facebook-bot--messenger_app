@@ -160,7 +160,6 @@ function objectToQuery(field, value) {
 
 //function to register person to event
 function addToEvent(collection, sender, userData) {
-	console.log("Fn addToEvent STARTED!!")
 	let today = getCurrentDate();
 	let query = {};
 	query[today] = {$exists: true};
@@ -394,13 +393,14 @@ MongoClient.connect(mongodbLink, function(err, database) {
         	let value = req.body.entry[0]["changes"][0]["value"];
         	console.log("value in page changes: \n" + JSON.stringify(value))
         	let senderInPost = value["sender_id"];
-
         	console.log("senderInPost: \n" + senderInPost);
         	getSenderData(senderInPost, token, function(userData) {
         		userData = JSON.parse(userData);
         		if (!userData["error"]) {
 		        	let today = getCurrentDate();
         			let query = {};
+        			let ev = checkEvent(events, today);
+        			console("Status of event: "+ev)
         			query[today] = {$exists: true};
         			events.find(query).toArray(function(err, docs) {
 				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false}
