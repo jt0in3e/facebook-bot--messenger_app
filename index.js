@@ -396,7 +396,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		let messaging_events = req.body.entry[0].messaging;
         if (!messaging_events) {
         	let value = req.body.entry[0]["changes"][0]["value"];
-        	console.log("value in page changes: \n" + JSON.strigify(value))
+        	console.log("value in page changes: \n" + JSON.stringify(value))
         	let senderInPost = value["sender_id"];
         	console.log("senderInPost: \n" + senderInPost);
         	getSenderData(senderInPost, token, function(userData) {
