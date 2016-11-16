@@ -428,7 +428,9 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						}
 						count += 1;
 						persons.push(userData);
-						events.update(query, {$set: {"registered": count, "personsRegistered": persons}})
+						replacement[today]["registered"] = count;
+						replacement[today]["personsRegistered"] = persons;
+						events.update(query, {$set: replacement})
 						console.log("You have beed added!");
         			})
         		} else {
