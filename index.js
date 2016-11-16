@@ -411,9 +411,9 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false}
 		        		let statusId = value["parent_id"];
 		        		console.log("typeof statusId: " + typeof statusId)
-		        		console.log("typeof docs[id]: " + typeof docs["id"])
+		        		console.log("typeof docs[id]: " + typeof docs[0]["id"])
 		        		console.log("statusId: " + statusId)
-		        		console.log("docs[id]: " + docs[0][today]["id"])
+		        		console.log("docs[id]: " + docs[0]["id"])
 		        		//if (statusId != docs[0][today]["id"]) {return console.log("not this post/status")}
 		        		let item = value["item"];
 						let message = value["message"];
