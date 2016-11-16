@@ -400,7 +400,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		        	let today = getCurrentDate();
         			let query = {};
         			let ev = checkEvent(events, today);
-        			console("Status of event: "+ev)
+        			console.log("Status of event: "+ev)
         			query[today] = {$exists: true};
         			events.find(query).toArray(function(err, docs) {
 				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false}
