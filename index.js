@@ -494,6 +494,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				}
 			});
 		};
+		res.status(200);
 		res.sendStatus(200);
 	})
 
