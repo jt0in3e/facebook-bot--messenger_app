@@ -398,6 +398,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 	// to post data back to FB
 	app.post('/webhook/', function (req, res) {
 		//console.log("WEBHOOK req.body: \n" + JSON.stringify(req.body));
+		res.status(200).send("OK");
 		let messaging_events = req.body.entry[0].messaging;
         if (!messaging_events) {
         	let value = req.body.entry[0]["changes"][0]["value"];
@@ -494,8 +495,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				}
 			});
 		};
-		res.status(200);
-		res.sendStatus(200);
 	})
 
 	//start server
