@@ -75,6 +75,26 @@ function addPost(pageId, text, callback) {
 	})
 }
 
+//fn to add comment
+function addComment(postId, text) {
+	request({
+		url: 'https://graph.facebook.com/v2.6/' + postId,
+		qs: {access_token:token},
+		method: 'POST',
+		json: {
+			message: text,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error posting message to page from addPost fn: ', error)
+		} else if (response.body.error) {
+			console.log('Error from addPost fn: ', response.body.error)
+		} else {
+            console.log("Comment to " + postId + " was added!")
+		}
+	})
+}
+
 //fn to remove posts from Page
 function removePost(pageId, postId) {
 	console.log("removePost fn STARTED")
@@ -393,6 +413,10 @@ MongoClient.connect(mongodbLink, function(err, database) {
 				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false};
 				        console.log("DOCS in status: " + JSON.stringify(docs))
 		        		let statusId = value["parent_id"];
+		        		if (!docs.length) {
+		        			console.log("NO event created. Exiting...");
+		        			return addComment(statusId, "No event have been created")
+		        		}
 		        		if (statusId !== docs[0]["id"]) {return console.log("not this time. Event is in past")}
 		        		let item = value["item"];
 						let message = value["message"];
