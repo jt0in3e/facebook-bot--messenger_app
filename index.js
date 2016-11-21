@@ -77,8 +77,9 @@ function addPost(pageId, text, callback) {
 
 //fn to add comment
 function addComment(postId, text) {
+	let url = 'https://graph.facebook.com/v2.6/' + postId + '/comments';
 	request({
-		url: 'https://graph.facebook.com/v2.6/' + postId,
+		url: url,
 		qs: {access_token:token},
 		method: 'POST',
 		json: {
@@ -86,9 +87,9 @@ function addComment(postId, text) {
 		}
 	}, function(error, response, body) {
 		if (error) {
-			console.log('Error posting message to page from addPost fn: ', error)
+			console.log('Error posting comment to page from addComment fn: ', error)
 		} else if (response.body.error) {
-			console.log('Error from addPost fn: ', response.body.error)
+			console.log('Error from addComment fn: ', response.body.error)
 		} else {
             console.log("Comment to " + postId + " was added!")
 		}
