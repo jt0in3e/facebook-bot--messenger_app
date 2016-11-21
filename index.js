@@ -124,12 +124,6 @@ function createEvent(pageID, collection, date, sender, callback) {
 	}); //trying this to find check solution http://stackoverflow.com/questions/8389811/how-to-query-mongodb-to-test-if-an-item-exists
 }
 
-function checkEvent(collection, date) {
-	let queryTest = {};
-	queryTest[date] = {$exists: true};
-	return collection.find(queryTest).limit(1).count();
-}
-
 //fn remove event from DB
 function removeEventFromDB(collection, postId) {
       console.log("removeEventFromDB STARTED")
@@ -394,11 +388,10 @@ MongoClient.connect(mongodbLink, function(err, database) {
         		if (!userData["error"]) {
 		        	let today = getCurrentDate();
         			let query = {};
-        			let ev = checkEvent(events, today);
-        			console.log("Status of event: "+ev)
         			query[today] = {$exists: true};
-        			events.find(query).toArray(function(err, docs) {
-				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false}
+        			events.find(query).limit(1).toArray(function(err, docs) {
+				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false};
+				        console.log("DOCS in status: " + JSON.stringify(docs))
 		        		let statusId = value["parent_id"];
 		        		if (statusId !== docs[0]["id"]) {return console.log("not this time. Event is in past")}
 		        		let item = value["item"];
