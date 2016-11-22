@@ -425,7 +425,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         					let replacement = {};
         					if (senderInPost != pageID) {
         						replacement[date] = {"registered": 1
-        											, "personsRegistered": userData
+        											, "personsRegistered": [userData]
         											};
         						replacement["id"] = postId;
         						events.save(replacement, function(err, result) {
