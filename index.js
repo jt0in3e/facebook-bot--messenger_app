@@ -415,7 +415,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         	console.log("senderInPost: \n" + senderInPost);
         	getSenderData(senderInPost, token, function(userData) {
         		userData = JSON.parse(userData);
-        		if (item == "status") {
+        		if (item == "status" || item == "post") {
         			let date = parseDate(text);
         			if (!date || !(/[+1]/.test(text))) {return console.log("No event is added from status. Exiting")};
         			let query = {};
