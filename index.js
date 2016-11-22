@@ -409,6 +409,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         	console.log("value in page changes: \n" + JSON.stringify(value))
         	let senderInPost = value["sender_id"];
         	let item = value["item"];
+        	console.log("Item in post: " + item)
         	let text = value["message"];
         	let postId = value["post_id"];
         	console.log("senderInPost: \n" + senderInPost);
@@ -442,6 +443,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         						})
 
         					}
+        				return false;
         				}
         			})
         			return false;
