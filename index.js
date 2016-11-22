@@ -407,7 +407,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         	console.log("senderInPost: \n" + senderInPost);
         	getSenderData(senderInPost, token, function(userData) {
         		userData = JSON.parse(userData);
-        		if (!userData["error"]) {
+        		if ((senderInPost!=pageID) || !userData["error"]) {
 		        	let today = getCurrentDate();
         			let query = {};
         			query[today] = {$exists: true};
@@ -443,7 +443,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						console.log("You have beed added!");
         			})
         		} else {
-        			console.log("requested page:\n"+JSON.stringify(userData))
+        			return console.log("requested page:\n"+JSON.stringify(userData))
         		}
 
         	})
