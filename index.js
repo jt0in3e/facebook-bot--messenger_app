@@ -8,7 +8,7 @@ const MongoClient = require("mongodb").MongoClient
 let db = "" //for database scope
 let events = "" //for events collection in database
 let users = "" //for users collection in database
-let regDate = /(0[1-9]|[12][0-9]|3[01])([-\/.,:;])(0[1-9]|1[0-2])/; //to find and check dates
+let regDate = /(0[1-9]|[12][0-9]|3[01])(?:[\/.,;])(0[1-9]|1[0-2])/; //to find and check dates
 // for facebook verification 
 /*it's better to setup environment variable i.e.
 var verificationToken = process.env.VERIFY_TOKEN on you app's server*/
@@ -120,9 +120,11 @@ function processComment(text) {
 }
 
 //fn to test dates inserted in requests
-function testDates(date) {
-	let reg = regDate;
-	return reg.test(date);
+function parseDate(text) {
+	let today = getCurrentDate();
+	let arr = regDate.exec(text);
+	if (!arr) {return false}; //checks only for current year
+	return arr[1] + "/" + arr[2] + today.substr(-5)
 }
 
 //function to create event from messenger, save it to DB and post on page
@@ -406,10 +408,45 @@ MongoClient.connect(mongodbLink, function(err, database) {
         	let value = req.body.entry[0]["changes"][0]["value"];
         	console.log("value in page changes: \n" + JSON.stringify(value))
         	let senderInPost = value["sender_id"];
+        	let item = value["item"];
+        	let text = value["message"];
+        	let postId = value["post_id"];
         	console.log("senderInPost: \n" + senderInPost);
         	getSenderData(senderInPost, token, function(userData) {
         		userData = JSON.parse(userData);
-        		if ((senderInPost!=pageID) || !userData["error"]) {
+        		if (item == "status") {
+        			let date = parseDate(text);
+        			if (!date || !(/[+1]/.test(text))) {return console.log("No event is added from status. Exiting")};
+        			let query = {};
+        			query[date] = {$exists:true};
+        			events.find(query).limit(1).toArray(function(err, docs) {
+        				if (!docs.length) {
+        					let replacement = {};
+        					if (senderInPost != pageID) {
+        						replacement[date] = {"registered": 1
+        											, "personsRegistered": userData
+        											};
+        						replacement["id"] = postId;
+        						events.save(replacement, function(err, result) {
+        							if (err) {console.log("Err from status update: " + err)}
+        							return console.log("Saved to db and exited " + result)
+        						})
+        					} else {
+        						replacement[date] = {"registered": 0
+        											, "personsRegistered": []
+        											};
+        						replacement["id"] = postId;
+        						events.save(replacement, function(err, result) {
+        							if (err) {console.log("Err from status update: " + err)}
+        							return console.log("Saved to db and exited " + result)
+        						})
+
+        					}
+        				}
+        			})
+        			return false;
+        		}
+        		if ((senderInPost!=pageID) || !(userData["error"])) {
 		        	let today = getCurrentDate();
         			let query = {};
         			query[today] = {$exists: true};
