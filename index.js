@@ -8,6 +8,7 @@ const MongoClient = require("mongodb").MongoClient
 let db = "" //for database scope
 let events = "" //for events collection in database
 let users = "" //for users collection in database
+let regDate = /(0[1-9]|[12][0-9]|3[01])([-\/.,:;])(0[1-9]|1[0-2])/; //to find and check dates
 // for facebook verification 
 /*it's better to setup environment variable i.e.
 var verificationToken = process.env.VERIFY_TOKEN on you app's server*/
@@ -113,13 +114,14 @@ function removePost(pageId, postId) {
 	})
 }
 
-function processComment() {
+//fn to parse text
+function processComment(text) {
 
 }
 
 //fn to test dates inserted in requests
 function testDates(date) {
-	let reg = /^\d\d\/\d\d\/\d\d\d\d$/;
+	let reg = regDate;
 	return reg.test(date);
 }
 
@@ -128,8 +130,8 @@ function createEvent(pageID, collection, date, sender, callback) {
 	console.log("Date at the beggining: " + date);
 	if (date === "today" || date === "") {
 		date = getCurrentDate();
-	} else if (!testDates(date)) {
-		sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY) and try again");
+	} else if (!regDate.test(date)) {
+		sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM) and try again");
 		return false;
 	}
 	console.log("date after " + date)
@@ -270,8 +272,8 @@ function showCount(collection, sender, date) {
 		query[today]={$exists: true}
 	} else if(date === "all") {
 		query = {};
-	} else if (!testDates(date)) {
-		sendTextMessage(sender, "Date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY), relevant command (e.g. '/registered 01/01/2016' or '/registered today') and try again");
+	} else if (!regDate.test(date)) {
+		sendTextMessage(sender, "Date format is unrecognized. \nPlease enter valid format (i.e. DD/MM), relevant command (e.g. '/registered 01/01' or '/registered today') and try again");
 	  	return false;
 	} else {
 		query[date] = {$exists: true}
@@ -292,8 +294,8 @@ function listRegistered(collection, sender, date) {
 	let query = {};
 	if (date === "today" || date === "") {
 		date = today;
-	} else if (!testDates(date)) {
-		sendTextMessage(sender, "Date format is unrecognized. \nPlease enter valid format (i.e. DD/MM/YYYY), relevant command (e.g. '/registered 01/01/2016' or '/registered today') and try again");
+	} else if (!regDate.test(date)) {
+		sendTextMessage(sender, "Date format is unrecognized. \nPlease enter valid format (i.e. DD/MM), relevant command (e.g. '/registered 01/01' or '/registered today') and try again");
 	  	return false;
 	}
 	query[date] = {$exists: true};
