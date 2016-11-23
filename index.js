@@ -506,12 +506,12 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						showCount(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
 						addToEvent(events, sender, userData, function(id, count) {
-                            let text = count + "\nRegistered " + userData["first_name"] + " " + userData["last_name"] + " throught messenger";
+                            let text = "\nRegistered " + userData["first_name"] + " " + userData["last_name"] + " throught messenger\n" + count;
                             addComment(id, text);
                         }); //register to current/today event
 					} else if (text.substring(0,7) === "/remove" || text[0] === "-") { //this fn is to remove user from event
 						removeFromEvent(events, sender, userData, function(id, count) {
-                            let text = count + "\nRemoved " + userData["first_name"] + " " + userData["last_name"] + " throught messenger";
+                            let text = "\nRemoved " + userData["first_name"] + " " + userData["last_name"] + " throught messenger\n" + count;
                             addComment(id, text);
                         });
 					} else if (text.substring(0,5) === "/list") {
