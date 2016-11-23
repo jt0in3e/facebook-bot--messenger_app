@@ -470,6 +470,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
                             addToEvent(events, senderInPost, userData);
                         } else if (/\-/.test(text)) {
                             removeFromEvent(events, senderInPost, userData);
+                        }
                     });
                 }
         	})
