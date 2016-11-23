@@ -187,7 +187,8 @@ function addToEvent(collection, sender, userData, callback) {
 		let replacement = {};
 		if (!persons.length) {
 			replacement[today] = {"registered": 1,
-								  "personsRegistered":[userData]}
+								  "personsRegistered":[userData]};
+            count = 1;
 		} else {
 			console.log("ELSE in persons comparison began")
 			for (let j=0; j<persons.length; j++) {
