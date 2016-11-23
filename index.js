@@ -444,7 +444,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
 
         					}
         				} else {
-                            let text = "Event already exists. See https://www.facebook.com/footballendpoint/posts/" + docs[0];
+                            let text = "Event already exists. See https://www.facebook.com/footballendpoint/posts/" + docs[0]["id"];
                             addComment(postId, text);
                         }
         			})
