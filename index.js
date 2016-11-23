@@ -443,8 +443,10 @@ MongoClient.connect(mongodbLink, function(err, database) {
         						})
 
         					}
-        				return false;
-        				}
+        				} else {
+                            let text = "Event already exists. See https://www.facebook.com/footballendpoint/posts/" + docs[0];
+                            addComment(postId, text);
+                        }
         			})
         			return false;
         		}
