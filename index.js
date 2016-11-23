@@ -464,7 +464,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         		} else if (item == "comment") {
                     if (senderInPost == pageID) {return false};
                     let query = {};
-                    query[value["parent_id"]] = {$exists:true};
+                    query["id"] = value["parent_id"];
                     events.find(query).limit(1).toArray(function(err, docs) {
                         if (!docs.length) {return console.log("No event found")};
                         if (/[+\d{1,2}]/.test(text)) {
