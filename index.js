@@ -461,53 +461,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
                         }
         			})
         			return false;
-
-        		}
-        		if ((senderInPost!=pageID) || !(userData["error"])) {
-		        	let today = getCurrentDate();
-        			let query = {};
-        			query[today] = {$exists: true};
-        			events.find(query).limit(1).toArray(function(err, docs) {
-				        if (err) {console.log("Smth strange happen.\nPlease try again"); return false};
-				        console.log("DOCS in status: " + JSON.stringify(docs))
-		        		let statusId = value["parent_id"];
-		        		if (!docs.length) {
-		        			console.log("NO event created. Exiting...");
-		        			addComment(statusId, "No event have been created");
-		        			return false;
-		        		}
-		        		if (statusId !== docs[0]["id"]) {return console.log("not this time. Event is in past")}
-						let count = docs[0][today]["registered"];
-						let persons = docs[0][today]["personsRegistered"];
-						let replacement = {};
-						replacement[today] = {"registered": 0, "personsRegistered": []};
-						if (persons.length) {
-							for (let j=0; j<persons.length; j++) {
-								console.log("Persons last_name: " + persons[j]["last_name"])
-								if (userData["last_name"] === persons[j]["last_name"]) {
-									console.log("You are already registered");
-									if (/-/.test(text)) {
-										removeFromEvent(events, senderInPost, userData);
-										return console.log("You have been removed");
-									} else if (/[+\d{1,2}]/.test(text)) {
-										addComment(statusId, "You are already in the list. You rock!")
-									}
-									return false;
-								}
-							}
-						}
-						count += 1;
-						persons.push(userData);
-						replacement[today]["registered"] = count;
-						replacement[today]["personsRegistered"] = persons;
-						events.update(query, {$set: replacement})
-						console.log("You have beed added!");
-        			})
-        		} else {
-        			return console.log("requested page:\n"+JSON.stringify(userData))
-        		}
-
-=======
         		} else if (item == "comment") {
                     if (senderInPost == pageID) {return false};
                     let query = {};
@@ -521,7 +474,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
                         }
                     });
                 }
->>>>>>> f5e0bff3609a00d17bc2b722ce2b808b22f81364
         	})
         	return console.log("Received page updates, not message")
         }
