@@ -173,19 +173,22 @@ function objectToQuery(field, value) {
 }
 
 //function to register person to event
-function addToEvent(collection, sender, userData) {
+function addToEvent(collection, sender, userData, callback) {
 	let today = getCurrentDate();
 	let query = {};
+    let id = "";
 	query[today] = {$exists: true};
 	collection.find(query).toArray(function(err,docs) {
 		if (err) {sendTextMessage(sender, "Smth strange happen.\nPlease try again")}
 		if (!docs.length) {sendTextMessage(sender, "Event for current date is not created! \nPlease use '/event' command to add new event for today"); return false;}
 		let count = docs[0][today]["registered"];
 		let persons = docs[0][today]["personsRegistered"];
+        id = docs[0]["id"];
 		let replacement = {};
 		if (!persons.length) {
 			replacement[today] = {"registered": 1,
-								  "personsRegistered":[userData]}
+								  "personsRegistered":[userData]};
+            count = 1;
 		} else {
 			console.log("ELSE in persons comparison began")
 			for (let j=0; j<persons.length; j++) {
@@ -214,20 +217,25 @@ function addToEvent(collection, sender, userData) {
 			}
 		)
 		sendTextMessage(sender, "You have beed added!");
+        if (typeof callback == "function") {
+            callback(id, count)
+        }
 	})
 }
 
 //remove user from event
-function removeFromEvent(collection, sender, userData) {
+function removeFromEvent(collection, sender, userData, callback) {
 	console.log("Fn removeFromEvent STARTED!!")
 	let today = getCurrentDate();
 	let query = {};
+    let id = "";
 	query[today] = {$exists: true};
 	collection.find(query).toArray(function(err,docs) {
 		if (err) {sendTextMessage(sender, "Smth strange happen.\nPlease try again")}
 		if (!docs.length) {sendTextMessage(sender, "Event for " +today+ " is not created! \nAnd nobody can't be removed from the event:)"); return false;}
 		let count = docs[0][today]["registered"];
 		let persons = docs[0][today]["personsRegistered"];
+        id = docs[0]["id"];
 		let replacement = {};
 		let check = false;
 		if (persons.length) {
@@ -262,6 +270,9 @@ function removeFromEvent(collection, sender, userData) {
 		                   }
                                       )
 		sendTextMessage(sender, "You have beed removed from the event!");
+        if (typeof callback == "function") {
+            callback(id, count)
+        }
 	})
 
 }
@@ -443,10 +454,14 @@ MongoClient.connect(mongodbLink, function(err, database) {
         						})
 
         					}
-        				return false;
-        				}
+        				} else {
+                            let id = /\d+_(\d+)/.exec(docs[0]["id"]);
+                            let text = "Event already exists. See https://www.facebook.com/footballendpoint/posts/" + id[1];
+                            addComment(postId, text);
+                        }
         			})
         			return false;
+<<<<<<< HEAD
         		}
         		if ((senderInPost!=pageID) || !(userData["error"])) {
 		        	let today = getCurrentDate();
@@ -492,6 +507,21 @@ MongoClient.connect(mongodbLink, function(err, database) {
         			return console.log("requested page:\n"+JSON.stringify(userData))
         		}
 
+=======
+        		} else if (item == "comment") {
+                    if (senderInPost == pageID) {return false};
+                    let query = {};
+                    query["id"] = value["parent_id"];
+                    events.find(query).limit(1).toArray(function(err, docs) {
+                        if (!docs.length) {return console.log("No event found")};
+                        if (/[+\d{1,2}]/.test(text)) {
+                            addToEvent(events, senderInPost, userData);
+                        } else if (/\-/.test(text)) {
+                            removeFromEvent(events, senderInPost, userData);
+                        }
+                    });
+                }
+>>>>>>> f5e0bff3609a00d17bc2b722ce2b808b22f81364
         	})
         	return console.log("Received page updates, not message")
         }
@@ -523,9 +553,15 @@ MongoClient.connect(mongodbLink, function(err, database) {
 					} else if (text.substring(0,11) === "/registered") {
 						showCount(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
-						addToEvent(events, sender, userData); //register to current/today event
+						addToEvent(events, sender, userData, function(id, count) {
+                            let text = "\nRegistered " + userData["first_name"] + " " + userData["last_name"] + " throught messenger\n" + count;
+                            addComment(id, text);
+                        }); //register to current/today event
 					} else if (text.substring(0,7) === "/remove" || text[0] === "-") { //this fn is to remove user from event
-						removeFromEvent(events, sender, userData);
+						removeFromEvent(events, sender, userData, function(id, count) {
+                            let text = "\nRemoved " + userData["first_name"] + " " + userData["last_name"] + " throught messenger\n" + count;
+                            addComment(id, text);
+                        });
 					} else if (text.substring(0,5) === "/list") {
 						listRegistered(events, sender, text.substring(6))
 					} else if (text.substring(0,6) === "/help") {
