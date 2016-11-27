@@ -458,7 +458,8 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		        		let statusId = value["parent_id"];
 		        		if (!docs.length) {
 		        			console.log("NO event created. Exiting...");
-		        			return addComment(statusId, "No event have been created")
+		        			addComment(statusId, "No event have been created");
+		        			return false;
 		        		}
 		        		if (statusId !== docs[0]["id"]) {return console.log("not this time. Event is in past")}
 		        		let item = value["item"];
