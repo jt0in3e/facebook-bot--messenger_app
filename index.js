@@ -462,8 +462,6 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		        			return false;
 		        		}
 		        		if (statusId !== docs[0]["id"]) {return console.log("not this time. Event is in past")}
-		        		let item = value["item"];
-						let message = value["message"];
 						let count = docs[0][today]["registered"];
 						let persons = docs[0][today]["personsRegistered"];
 						let replacement = {};
@@ -473,6 +471,12 @@ MongoClient.connect(mongodbLink, function(err, database) {
 								console.log("Persons last_name: " + persons[j]["last_name"])
 								if (userData["last_name"] === persons[j]["last_name"]) {
 									console.log("You are already registered");
+									if (/-/.test(text)) {
+										removeFromEvent(events, senderInPost, userData);
+										return console.log("You have been removed");
+									} else if (/[+\d{1,2}]/.test(text)) {
+										addComment(statusId, "You are already in the list. You rock!")
+									}
 									return false;
 								}
 							}
