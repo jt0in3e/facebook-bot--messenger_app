@@ -454,7 +454,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         						})
 
         					}
-        				} else {
+        				} else if (senderInPost != pageID) {
                             let id = /\d+_(\d+)/.exec(docs[0]["id"]);
                             let text = "Event already exists. See https://www.facebook.com/footballendpoint/posts/" + id[1];
                             addComment(postId, text);
@@ -467,10 +467,15 @@ MongoClient.connect(mongodbLink, function(err, database) {
                     query["id"] = value["parent_id"];
                     events.find(query).limit(1).toArray(function(err, docs) {
                         if (!docs.length) {return console.log("No event found")};
-                        if (/[+\d{1,2}]/.test(text)) {
-                            addToEvent(events, senderInPost, userData);
+                        if (/\+/.test(text)) {
+                            addToEvent(events, senderInPost, userData, function(id, count) {
+                            	let text = "\nAdded " + userData["first_name"] + " " + userData["last_name"] + ".\nRegistered: " + count
+                            });
                         } else if (/\-/.test(text)) {
-                            removeFromEvent(events, senderInPost, userData);
+                            removeFromEvent(events, senderInPost, userData, function(id, count) {
+                            let text = "\nRemoved " + userData["first_name"] + " " + userData["last_name"] + " \n" + "Registered: " + count;
+                            addComment(id, text);
+                        });
                         }
                     });
                 }
