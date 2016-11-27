@@ -467,9 +467,10 @@ MongoClient.connect(mongodbLink, function(err, database) {
                     query["id"] = value["parent_id"];
                     events.find(query).limit(1).toArray(function(err, docs) {
                         if (!docs.length) {return console.log("No event found")};
-                        if (/\+/.test(text)) {
+                        if (/[\+\d{1,2}]/.test(text)) {
                             addToEvent(events, senderInPost, userData, function(id, count) {
-                            	let text = "\nAdded " + userData["first_name"] + " " + userData["last_name"] + ".\nRegistered: " + count
+                            	let text = "\nAdded " + userData["first_name"] + " " + userData["last_name"] + ".\nRegistered: " + count;
+                            	addComment(id, text);
                             });
                         } else if (/\-/.test(text)) {
                             removeFromEvent(events, senderInPost, userData, function(id, count) {
