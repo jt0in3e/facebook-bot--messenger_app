@@ -461,7 +461,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
                         }
         			})
         			return false;
-<<<<<<< HEAD
+
         		}
         		if ((senderInPost!=pageID) || !(userData["error"])) {
 		        	let today = getCurrentDate();
