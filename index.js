@@ -474,7 +474,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
                             });
                         } else if (/\-/.test(text)) {
                             removeFromEvent(events, senderInPost, userData, function(id, count) {
-                            let text = "\nRemoved " + userData["first_name"] + " " + userData["last_name"] + " \n" + "Registered: " + count;
+                            let text = "\nRemoved " + userData["first_name"] + " " + userData["last_name"] + " \nRegistered: " + count;
                             addComment(id, text);
                         });
                         }
