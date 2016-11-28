@@ -1,5 +1,29 @@
-# 🤖 Creating your own Facebook Messenger bot
+# 🤖 Facebook Messenger bot & fb-app -->> all-in-one
 
+## 🙌 not disclaimer
+initially project is forked from [messenger-bot-tutorial](https://github.com/jw84/messenger-bot-tutorial) . All process of installation of messenger bot and relevant installation could be found [there](https://github.com/jw84/messenger-bot-tutorial).
+
+Used technology:
+--> git&github
+--> nodejs
+--> javascript :)
+--> mongodb
+--> heroku
+--> bash/terminal
+--> facebook/messenger
+--> lovely linux :)
+
+## 🙌 How stuff works / demo
+To demostrate how it works go to facebook page - [Footballer/Футболєр](https://www.facebook.com/footballendpoint/) and send message to the page. Or you can write post and fb-app will act accordingly.
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
 ![Alt text](/demo/Demo.gif)
 
 Facebook recently opened up their Messenger platform to enable bots to converse with users through Facebook Apps and on Facebook Pages. 
