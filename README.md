@@ -78,3 +78,5 @@ No problema, -->
 * --> works on IPTV
 * --> web-site on showing bad parked cars
 * --> license car plate recognition (in very future perspective)
+
+OK
