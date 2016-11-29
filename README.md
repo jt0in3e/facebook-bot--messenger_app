@@ -16,7 +16,8 @@ Used technology:
 ## 🙌 How stuff works / demo
 To demostrate how it works go to facebook page - [Footballer/Футболєр](https://www.facebook.com/footballendpoint/) and send message to the page. Or you can write post and fb-app will act accordingly.
 
-
+this is demo preview . video with instruction how to use see on [Yutube](#)
+![Alt text](/demo_app/2s.gif)
 
 
 
