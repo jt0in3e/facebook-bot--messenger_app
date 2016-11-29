@@ -38,39 +38,39 @@ or
 Go to [Page](https://www.facebook.com/footballendpoint/) and start conversetion with messenger.
 Bot understands the following command:
 
-'''
+    '''
     /event                  --> creates event for the current date {not fb-event but 'event' with its own database/mongodb/ and own managment process} and adds user to this event; post text as the Page status saying about creation of event and adding of user
-'''
+    '''
 
-'''
+    '''
     /list                      -->  checks whether event exists and shows/lists all users added to the event
-'''
+    '''
 
-'''
+    '''
     /registered         --> cheks whether event exists and shows how many users registered [count]
-'''
+    '''
 
-'''
+    '''
     /remove [or] "-"  --> checks whether event exists and remove registered user; sends comment to the main status of event saying that user is removed; updates count of registered and list of registered persons
-'''
+    '''
 
-'''
+    '''
     /add [or] "+"       --> checks whether event exists and add user to event; sends comment to the main status of event saying that user is added; updates count of registered and list of registered persons
-'''
+    '''
 
-'''
+    '''
     /help               --> display available commands
-'''
+    '''
 
-'''
+    '''
     [other text]    --> bot respones that command is not understandable
-'''
+    '''
 
 
 ### Creating event thought the Page statuses / users posts
 
 
-
+-------------------------------------------------------------------------
 
 
 ## | |  Documented process of bot && app creation
@@ -88,6 +88,6 @@ or [tweet](https://twitter.com/engineering_lf) me,
 or [view&comment&subscibe :) Youtube chnl](https://www.youtube.com/channel/UCRutklAuR4EtKzQZDatGpKA)
 
 #| other active projects
---> works on IPTV
---> web-site on showing bad parked cars
---> license car plate recognition (in very future perspective)
+\n --> works on IPTV
+\n --> web-site on showing bad parked cars
+\n --> license car plate recognition (in very future perspective)
