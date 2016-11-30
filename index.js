@@ -37,7 +37,7 @@ function sendTextMessage(sender, text) {
 	let messageData = { text:text }
 	
 	request({
-		url: 'https://graph.facebook.com/v2.6/me/messages',
+		url: 'https://graph.facebook.com/v2.8/me/messages',
 		qs: {access_token:token},
 		method: 'POST',
 		json: {
@@ -57,7 +57,7 @@ function sendTextMessage(sender, text) {
 //fn to post  text to page
 function addPost(pageId, text, callback) {
 	request({
-		url: 'https://graph.facebook.com/v2.6/me/feed',
+		url: 'https://graph.facebook.com/v2.8/me/feed',
 		qs: {access_token:token},
 		method: 'POST',
 		json: {
@@ -78,7 +78,7 @@ function addPost(pageId, text, callback) {
 
 //fn to add comment
 function addComment(postId, text) {
-	let url = 'https://graph.facebook.com/v2.6/' + postId + '/comments';
+	let url = 'https://graph.facebook.com/v2.8/' + postId + '/comments';
 	request({
 		url: url,
 		qs: {access_token:token},
@@ -101,11 +101,11 @@ function addComment(postId, text) {
 function removePost(pageId, postId) {
 	console.log("removePost fn STARTED")
 	request({
-		url: 'https://graph.facebook.com/v2.6/' + postId,
+		url: 'https://graph.facebook.com/v2.8/' + postId,
 		qs: {access_token:token},
 		method: 'DELETE',
 	}, function(error, response, body) {
-		console.log("URL of post to be removed: \n" + 'https://graph.facebook.com/v2.6/' + postId)
+		console.log("URL of post to be removed: \n" + 'https://graph.facebook.com/v2.8/' + postId)
 		if (error) {
 			console.log('Error deleting post from page from removePost fn: ', error)
 		} else if (response.body.error) {
@@ -335,7 +335,7 @@ function listRegistered(collection, sender, date) {
 function getSenderData(sender, token, callback) {
 	
 	request({
-		url: 'https://graph.facebook.com/v2.6/' + sender,
+		url: 'https://graph.facebook.com/v2.8/' + sender,
 		qs: {access_token:token,
 			fields: "first_name, last_name"},
 		method: 'GET'
