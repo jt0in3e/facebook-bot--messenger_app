@@ -426,6 +426,7 @@ MongoClient.connect(mongodbLink, function(err, database) {
         	let postId = value["post_id"];
         	console.log("senderInPost: \n" + senderInPost);
         	getSenderData(senderInPost, token, function(userData) {
+                console.log("UserData: " + userData);
         		userData = JSON.parse(userData);
         		if (item == "status" || item == "post") {
         			let date = parseDate(text);

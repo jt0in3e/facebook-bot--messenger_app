@@ -14,9 +14,9 @@ Used technology:
 * --> lovely linux :)
 
 ## 🙌 How stuff works / demo
-To demostrate how it works go to facebook Page - [Footballer/Футболєр](https://www.facebook.com/footballendpoint/) and send message to the page. Or you can write post and fb-app will act accordingly.
+To demostrate how it works go to facebook Page - [Footballer/Футболєр](https://www.facebook.com/Event-make-bot-Community-1352106568187457/?fref=nf) and send message in messenger to the page. Or you can write post and fb-app will act accordingly.
 
-this is demo preview . video with instruction how to use see on [Youtube](#)
+this is demo preview. video with instruction how to use see on [Youtube](#)
 
 ![Alt text](/demo_app/2s.gif)
 
@@ -35,7 +35,8 @@ or
 
 ### Using messenger
 
-Go to [Page](https://www.facebook.com/footballendpoint/) and start conversetion with messenger.
+Go to [Page](https://www.facebook.com/Event-make-bot-Community-1352106568187457/?fref=nf) and start conversetion with messenger or start conversation from you chat by finding the bot -> 'Event-make-bot-Community'.
+
 Bot understands the following command:
 
 >    **/event**                  --> *creates event for the current date {not fb-event but 'event' with its own database/mongodb/ and own managment process} and adds user to this event; post text as the Page status saying about creation of event and adding of user*
@@ -56,7 +57,11 @@ Bot understands the following command:
 
 ### Creating event thought the Page statuses / users posts
 
-
+Go to the [Event-make-bot-Community Page](https://www.facebook.com/Event-make-bot-Community-1352106568187457/?fref=nf) and post you status with text consisting of current date {forman is DD/MM} and add sign '+' or number '1' or '+1'. 
+E.g. "Lets get together today (30/11) in pub 'yeap-drink' and have fun. +1".
+Fb-app/bot will scan this text and if no event, it will create event and add user to the event. 
+Persons, who wants to be added to the event, could post comment with text '+' or '[number]' to the above status and will be registered to the event / added to the database /. If you want to be removed from event, post comment to the above status with text '-' and bot automaticaly will remove you.
+List of registered persons and number/count of registered persons could be viewed throught messenger by sending commands to Event-make-bot-Community bot as '/list' and '/registered'
 
 -------------------------------------------------------------------------
 
@@ -80,4 +85,4 @@ No problema, -->
 * --> web-site on showing bad parked cars
 * --> license car plate recognition (in very future perspective)
 
-OK
+'not (c) YY
