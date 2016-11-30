@@ -389,7 +389,8 @@ function getUserFromDb(collection, lastName, callback) { //mongodb works async s
 
 //fn to show help w/ all commands
 function showHelp(sender) {
-	console.log(sender);
+    let text = "You can use following commands:\n/event -> to create event;\n/registered -> to view count of registered persons;\n/list -> to list all persons, registered to the event;\n/add or '+' ->to add you to the event;\n/remove or '-' -> to remove you from the event.\nGood luck!"
+    sendTextMessage(sender, text);
 }
 
 // connect to mongoDB & start server
@@ -513,24 +514,19 @@ MongoClient.connect(mongodbLink, function(err, database) {
 						showCount(events, sender, text.substring(12));
 					} else if (text.substring(0,4) === "/add" || text[0] === "+") {
 						addToEvent(events, sender, userData, function(id, count) {
-                            let text = "\nRegistered " + userData["first_name"] + " " + userData["last_name"] + " throught messenger\n" + count;
+                            let text = "\nRegistered " + userData["first_name"] + " " + userData["last_name"] + " throught messenger\nRegistered: " + count;
                             addComment(id, text);
                         }); //register to current/today event
 					} else if (text.substring(0,7) === "/remove" || text[0] === "-") { //this fn is to remove user from event
 						removeFromEvent(events, sender, userData, function(id, count) {
-                            let text = "\nRemoved " + userData["first_name"] + " " + userData["last_name"] + " throught messenger\n" + count;
+                            let text = "\nRemoved " + userData["first_name"] + " " + userData["last_name"] + " throught messenger\nRegistered: " + count;
                             addComment(id, text);
                         });
 					} else if (text.substring(0,5) === "/list") {
 						listRegistered(events, sender, text.substring(6))
 					} else if (text.substring(0,6) === "/help") {
 						showHelp(sender);
-					} else if (text.substring(0,2) === "/r") {
-						removePost(pageID, text.substring(3));
-						removeEventFromDB(events, text.substring(3));
-					} else if (text.substring(0,2) === "/p") {
-                        addPost(pageID, text.substring(3));
-                    } else {
+					} else {
 						sendTextMessage(sender, "I didn't get it :( \nPlease enter valid command. \n->print '/help' for details<-")
 					}
 				}
