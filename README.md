@@ -14,7 +14,7 @@ Used technology:
 * --> lovely linux :)
 
 ## 🙌 How stuff works / demo
-To demostrate how it works go to facebook Page - [Footballer/Футболєр](https://www.facebook.com/Event-make-bot-Community-1352106568187457/?fref=nf) and send message in messenger to the page. Or you can write post and fb-app will act accordingly.
+To demostrate how it works go to facebook Page - [Event-make-bot-Community](https://www.facebook.com/Event-make-bot-Community-1352106568187457/?fref=nf) and send message in messenger to the page. Or you can write post and fb-app will act accordingly. If you like the project and/or fb Page please don't leave it unliked :)
 
 this is demo preview. video with instruction how to use see on [Youtube](#)
 
@@ -84,5 +84,3 @@ No problema, -->
 * --> works on IPTV
 * --> web-site on showing bad parked cars
 * --> license car plate recognition (in very future perspective)
-
-'not (c) YY

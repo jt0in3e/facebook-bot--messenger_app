@@ -48,8 +48,8 @@ function sendTextMessage(sender, text) {
 		if (error) {
 			console.log('Error sending messages: ', error)
 		} else if (response.body.error) {
-			//console.log("if interested in Error uncomment code")	
-			console.log('Error: ', response.body.error)
+			console.log("if interested in Error uncomment code")	
+			//console.log('Error: ', response.body.error)
 		}
 	})
 }
@@ -92,20 +92,18 @@ function addComment(postId, text) {
 		} else if (response.body.error) {
 			console.log('Error from addComment fn: ', response.body.error)
 		} else {
-            console.log("Comment to " + postId + " was added!")
+            //console.log("Comment to " + postId + " was added!")
 		}
 	})
 }
 
 //fn to remove posts from Page
 function removePost(pageId, postId) {
-	console.log("removePost fn STARTED")
 	request({
 		url: 'https://graph.facebook.com/v2.8/' + postId,
 		qs: {access_token:token},
 		method: 'DELETE',
 	}, function(error, response, body) {
-		console.log("URL of post to be removed: \n" + 'https://graph.facebook.com/v2.8/' + postId)
 		if (error) {
 			console.log('Error deleting post from page from removePost fn: ', error)
 		} else if (response.body.error) {
@@ -129,14 +127,12 @@ function parseDate(text) {
 
 //function to create event from messenger, save it to DB and post on page
 function createEvent(pageID, collection, date, sender, callback) {
-	console.log("Date at the beggining: " + date);
 	if (date === "today" || date === "") {
 		date = getCurrentDate();
 	} else if (!regDate.test(date)) {
 		sendTextMessage(sender, "NOT SAVED, date format is unrecognized. \nPlease enter valid format (i.e. DD/MM) and try again");
 		return false;
 	}
-	console.log("date after " + date)
 	let query = objectToQuery(date, {"registered":0, "personsRegistered":[]});
 	let queryTest = {};
 	queryTest[date] = {$exists: true};
@@ -151,10 +147,8 @@ function createEvent(pageID, collection, date, sender, callback) {
 
 //fn remove event from DB
 function removeEventFromDB(collection, postId) {
-      console.log("removeEventFromDB STARTED")
       let query = {};
       query["id"] = postId;
-      console.log("query in removeEventFromDB: \n" + JSON.stringify(query))
       collection.remove(query);
 }
 
@@ -190,9 +184,7 @@ function addToEvent(collection, sender, userData, callback) {
 								  "personsRegistered":[userData]};
             count = 1;
 		} else {
-			console.log("ELSE in persons comparison began")
 			for (let j=0; j<persons.length; j++) {
-				console.log("Persons last_name: " + persons[j]["last_name"])
 				if (userData["last_name"] === persons[j]["last_name"]) {
 					sendTextMessage(sender, "You are already registered");
 					return false;
@@ -212,7 +204,7 @@ function addToEvent(collection, sender, userData, callback) {
 					console.warn(err.message);
 					return false;
 				} else {
-					console.dir(object);
+					//console.dir(object);
 				}
 			}
 		)
@@ -225,7 +217,6 @@ function addToEvent(collection, sender, userData, callback) {
 
 //remove user from event
 function removeFromEvent(collection, sender, userData, callback) {
-	console.log("Fn removeFromEvent STARTED!!")
 	let today = getCurrentDate();
 	let query = {};
     let id = "";
@@ -265,7 +256,7 @@ function removeFromEvent(collection, sender, userData, callback) {
 				        console.warn(err.message);
 				        return false;
 				} else {
-				        console.dir(object);
+				        //console.dir(object);
 				}
 		                   }
                                       )
@@ -354,7 +345,6 @@ function getSenderData(sender, token, callback) {
 function addUserToCollection(collection, userData) {
 	let query = {};
 	let senderID = userData["senderID"];
-	console.log("SENDERID in comments: " + senderID)
 	let id = userData["id"];
 	let last_name = userData["last_name"];
 	query["last_name"] = last_name;
@@ -362,15 +352,12 @@ function addUserToCollection(collection, userData) {
 		if (err) {console.log("Smth wrong writing data to users collection. See error\n" + err); return false;}
 		if (!docs.length) {
 			collection.insert(userData);
-			console.log("Added user \n" + JSON.stringify(userData) + "\n to users")
 		} else if (!docs[0].senderID && senderID) {
 			collection.update(query, {$set: {"senderID": senderID}});
-			console.log("Updated senderID");
 		} else if (!docs[0].id && id) {
 			collection.update(query, {$set: {"id": id}})
-			console.log("UPDATED USER ID")
 		} else {
-			console.log("User " + userData["last_name"] + " already in collection");
+			//console.log("User " + userData["last_name"] + " already in collection");
 		}
 	});
 
@@ -418,15 +405,11 @@ MongoClient.connect(mongodbLink, function(err, database) {
 		let messaging_events = req.body.entry[0].messaging;
         if (!messaging_events) {
         	let value = req.body.entry[0]["changes"][0]["value"];
-        	console.log("value in page changes: \n" + JSON.stringify(value))
         	let senderInPost = value["sender_id"];
         	let item = value["item"];
-        	console.log("Item in post: " + item)
         	let text = value["message"];
         	let postId = value["post_id"];
-        	console.log("senderInPost: \n" + senderInPost);
         	getSenderData(senderInPost, token, function(userData) {
-                console.log("UserData: " + userData);
         		userData = JSON.parse(userData);
         		if (item == "status" || item == "post") {
         			let date = parseDate(text);
